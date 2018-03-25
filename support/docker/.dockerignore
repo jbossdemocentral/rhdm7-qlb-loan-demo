@@ -1,0 +1,9 @@
+.git
+target
+docs
+init.ps1
+init.sh
+init-docker.ps1
+init-docker.sh
+README.md
+.DS_Store

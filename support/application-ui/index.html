@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html ng-app="demo">
+<head>
+  <meta charset="utf-8">
+  <title>QLB - Quik Loan Bank</title>
+
+  <!-- PatternFly Styles -->
+  <link rel="stylesheet" href="node_modules/patternfly/dist/css/patternfly.min.css">
+  <link rel="stylesheet" href="node_modules/patternfly/dist/css/patternfly-additions.min.css">
+
+  <!-- Bootstrap base + PatternFly extensions + Your styles -->
+  <!-- <link rel="stylesheet" href="css/mystyles.css"> -->
+
+  <!-- JS -->
+  <script src="node_modules/patternfly/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="node_modules/patternfly/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="node_modules/patternfly/dist/js/patternfly.min.js"></script>
+
+  <!-- C3, D3 - Charting Libraries -->
+  <script src="node_modules/patternfly/node_modules/d3/d3.min.js"></script>
+  <script src="node_modules/patternfly/node_modules/c3/c3.min.js"></script>
+
+  <script src="node_modules/patternfly/node_modules/jquery-match-height/dist/jquery.matchHeight-min.js"></script>
+
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/jquery.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/bootstrap.min.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/bootstrap-select.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/jquery-ui.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/jquery.dataTables.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/dataTables.select.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/moment.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/d3.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/c3.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/patternfly-settings.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/patternfly-settings-colors.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/patternfly-settings-charts.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-dragdrop.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-datatables.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-datatables.select.min.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-sanitize.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-animate.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/ui-bootstrap-tpls.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-bootstrap-prettify.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/lodash.min.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-patternfly.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-ui-router.min.js"></script>
+  <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-drag-and-drop-lists.js"></script>
+  
+  <script src="decisionServerClient.js"></script>
+
+</head>
+
+<body class="cards-pf">
+<!-- PatternFly Horizontal Nav -->
+<nav class="navbar navbar-default navbar-pf" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">
+        <img src="img/qlb_logo.png" alt="Quick Loan Bank" />
+      </a>
+    </div>
+    <div class="collapse navbar-collapse navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-utility">
+        <li>
+          <a href="#">Status</a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="pficon pficon-user"></span>
+            Lucien Bramard <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="#">Link</a>
+            </li>
+            <li>
+              <a href="#">Another link</a>
+            </li>
+            <li>
+              <a href="#">Something else here</a>
+            </li>
+            <li class="divider"></li>
+            <li class="dropdown-submenu">
+              <a tabindex="-1" href="#">More options</a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="#">Link</a>
+                </li>
+                <li>
+                  <a href="#">Another link</a>
+                </li>
+                <li>
+                  <a href="#">Something else here</a>
+                </li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li>
+                  <a href="#">Separated link</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                  <a href="#">One more separated link</a>
+                </li>
+              </ul>
+            </li>
+            <li class="divider"></li>
+            <li>
+              <a href="#">One more separated link</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-primary">
+        <li>
+          <a href="#">Home</a>
+        </li>
+        <li class="active">
+          <a href="#">Apply For a Loan</a>
+        </li>
+        <li>
+          <!-- <a href="#">Decision Service Regression Testing</a> -->
+        </li>
+        <li>
+          <!-- <a href="#">Decision Service Impact Testing</a> -->
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <div ng-controller="fire-loan-rules" class="container-fluid container-cards-pf">
+    <div class="row row-cards-pf">
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <!-- Aggregated status card -->
+        
+      </div> <!-- /col -->
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <!-- Aggregated status card -->
+
+      </div><!-- /col -->
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <!-- Aggregated status card -->
+
+      </div><!-- /col -->
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+       <!-- Aggregated status card -->
+
+      </div><!-- /col -->
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <!-- Aggregated status card -->
+      </div><!-- /col -->
+
+      <div class="col-xs-6 col-sm-4 col-md-2">
+        <!-- Aggregated status card -->
+      </div><!-- /col -->
+
+      <div class="col-xs-12 col-md-8">
+
+          <div class="card-pf card-pf-utilization">
+              <div class="card-pf-heading">
+                <p class="card-pf-heading-details">All fields are required</p>
+                <h2 class="right-aligned_all-fields-required">
+                    Loan Application
+                </h2>
+              </div> 
+        <!-- Utilization Trend Card -->
+        <div class="card-pf-body">
+      <form class="form-horizontal" role="form">
+        <h3 id="right-aligned_all-fields-required">Applicant Informations</h3>
+        <div class="form-group">
+          <label for="inputName" class="col-sm-2 control-label">Name</label>
+          <div class="col-sm-5">
+            <input type="text" ng-model="applicant.name" class="form-control" id="inputName" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputAge" class="col-sm-2 control-label">Age</label>
+          <div class="col-sm-2">
+            <input type="number" ng-model="applicant.age" class="form-control" id="inputAge" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputCreditScore" class="col-sm-2 control-label">Credit Score</label>
+          <div class="col-sm-2">
+            <input type="number" ng-model="applicant.creditScore" class="form-control" id="inputCreditScore" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="inputYearlyIncome" class="col-sm-2 control-label">Yearly Income</label>
+          <div class="col-sm-2">
+            <input type="number" ng-model="applicant.yearlyIncome" class="form-control" id="inputYearlyIncome" required>
+          </div>
+        </div>
+        <h3>Loan Informations</h3>
+        <div class="form-group">
+          <label for="inputAmount" class="col-sm-2 control-label">Amount</label>
+          <div class="col-sm-3">
+            <input type="number" ng-model="loan.amount" class="form-control" id="inputAmount" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="selectDuration" class="col-sm-2 control-label">Duration</label>
+          <div class="col-sm-3">
+          <select class="form-control" ng-model="loan.duration" id="selectDuration">
+            <option label="7">7</option>
+            <option label="10">10</option>
+            <option label="12">12</option>
+            <option label="15">15</option>
+            <option label="20">20</option>
+            <option label="25">25</option>
+          </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" ng-click="fireRules()" class="btn btn-default">Apply</button>
+          </div>
+        </div>
+      </div>
+      </form>
+      </div>
+      </div><!-- /col -->
+
+
+
+    
+          <div class="col-xs-12 col-md-4">
+    
+            <!-- Aggregated status card -->
+            <div class="card-pf card-pf-accented card-pf-aggregate-status" style="{{displayResults}}">
+
+              <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">
+                  <span class="card-pf-aggregate-status-notification"><span class="{{applicationResultIcon}}"></span>{{applicationResult}}</span>
+                </p>
+              </div>
+            </div>
+    
+          </div><!-- /col -->
+          <div class="col-xs-12 col-md-4" style="{{displayResults}}">
+              <div class="card-pf">
+                <div class="card-pf-heading">
+                  <h2 class="card-pf-title">
+                    Messages
+                  </h2>
+                </div>
+                <div class="card-pf-body">
+                  <div class="progress-description" ng-repeat="message in applicationResultMessages" >
+                      {{message}}
+                  </div> 
+                </div>
+              </div>
+      
+            </div><!-- /col -->
+
+    </div><!-- /row -->
+  </div><!-- /container -->
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "PatternFlyDemo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp"
+  },
+  "author": "Rachid Snoussi",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.13.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.0.4",
+    "gulp-less": "^3.1.0",
+    "gulp-less-sourcemap": "^1.4.3",
+    "gulp-plumber": "^1.1.0",
+    "gulp-uglify": "^1.5.4"
+  },
+  "dependencies": {
+    "patternfly": "^3.23.2"
+  }
+}
