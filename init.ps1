@@ -233,6 +233,7 @@ Copy-Item "$SUPPORT_DIR\userinfo.properties" "$SERVER_DIR\decision-central.war\W
 
 ################################# Install UI ##########################################
 
+Write-Host "- installing the UI...`n"
 Push-Location -Path "support\application-ui"
 $argList = "install"
 $npmProcess = (Start-Process -FilePath npm -ArgumentList $argList -Wait -PassThru -NoNewWindow)

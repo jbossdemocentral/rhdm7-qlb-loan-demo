@@ -1,0 +1,30 @@
+# Use jbossdemocentral/developer as the base
+FROM jbossdemocentral/developer
+
+# Maintainer details
+MAINTAINER Red Hat
+
+# Environment Variables
+ENV HOME /opt/jboss
+ENV APPLICATION_UI_HOME $HOME/application-ui
+
+# Install npm
+USER root
+RUN curl -sL https://rpm.nodesource.com/setup_8.x | bash - && yum -y install nodejs && yum clean all
+USER jboss
+
+# ADD UI Application
+COPY support/application-ui $APPLICATION_UI_HOME
+USER root
+RUN chown -R jboss:jboss $APPLICATION_UI_HOME
+USER jboss
+
+# Run npm install
+RUN cd $APPLICATION_UI_HOME && npm install
+
+# Expose Ports
+EXPOSE 3000
+
+# Run UI Application
+ENTRYPOINT ["npm"]
+CMD ["start","--prefix=/opt/jboss/application-ui"]

@@ -69,6 +69,8 @@ If (Test-Path "$SRC_DIR\$DM_KIE_SERVER") {
 }
 
 Copy-Item "$SUPPORT_DIR\docker\Dockerfile" "$PROJECT_HOME" -force
+Copy-Item "$SUPPORT_DIR\docker\Dockerfile-ui" "$PROJECT_HOME" -force
+Copy-Item "$SUPPORT_DIR\docker\docker-compose.yml" "$PROJECT_HOME" -force
 Copy-Item "$SUPPORT_DIR\docker\.dockerignore" "$PROJECT_HOME" -force
 
 Write-Host "Starting Docker build.`n"
@@ -82,19 +84,33 @@ If ($process.ExitCode -ne 0) {
 	exit
 }
 
+$argList = "build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo -f Dockerfile-ui $PROJECT_HOME"
+$process = (Start-Process -FilePath docker.exe -ArgumentList $argList -Wait -PassThru -NoNewWindow)
+Write-Host "`n"
+
+If ($process.ExitCode -ne 0) {
+	Write-Error "Error occurred during Docker build!"
+	exit
+}
+
 Write-Host "Docker build finished.`n"
 
 Remove-Item "$PROJECT_HOME\Dockerfile" -Force
+Remove-Item "$PROJECT_HOME\Dockerfile-ui" -Force
 
 Write-Host "================================================================================="
 Write-Host "=                                                                               ="
-Write-Host "=  You can now start the $PRODUCT in a Docker container with:             ="
+Write-Host "=  You can now start the $PRODUCT in a Docker containers with:             ="
 Write-Host "=                                                                               ="
-Write-Host "=  docker run -it -p 8080:8080 -p 9990:9990 jbossdemocentral/rhdm7-qlb-loan-demo ="
+Write-Host "=    docker-compose up 																														="
 Write-Host "=                                                                               ="
 Write-Host "=  Login into Decision Central at:                                              ="
 Write-Host "=                                                                               ="
 Write-Host "=    http://localhost:8080/decision-central  (u:dmAdmin / p:redhatdm1!)      ="
+Write-Host "=                                                                               ="
+Write-Host "=  Login into the Quick Loan Bank application at:                               ="
+Write-Host "=                                                                               ="
+Write-Host "=    http://localhost:3000                                                      ="
 Write-Host "=                                                                               ="
 Write-Host "=  See README.md for general details to run the various demo cases.             ="
 Write-Host "=                                                                               ="

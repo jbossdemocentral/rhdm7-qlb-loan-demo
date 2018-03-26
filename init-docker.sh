@@ -82,12 +82,15 @@ else
 fi
 
 cp support/docker/Dockerfile .
+cp support/docker/Dockerfile-ui .
+cp support/docker/docker-compose.yml .
 cp support/docker/.dockerignore .
 
-echo Starting Docker build.
+echo Starting Docker builds.
 echo
 
 docker build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo .
+docker build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo-ui -f Dockerfile-ui .
 
 if [ $? -ne 0 ]; then
         echo
@@ -100,18 +103,24 @@ echo Docker build finished.
 echo
 
 rm Dockerfile
+rm Dockerfile-ui
 
 echo
 echo "=================================================================================="
 echo "=                                                                                ="
 echo "=  You can now start the $PRODUCT in a Docker container with:    ="
 echo "=                                                                                ="
-echo "=  docker run -it -p 8080:8080 -p 9990:9990 jbossdemocentral/rhdm7-qlb-loan-demo ="
+echo "=     docker-compose up                                                          ="
 echo "=                                                                                ="
 echo "=  Login into Decision Central at:                                               ="
 echo "=                                                                                ="
 echo "=    http://localhost:8080/decision-central  (u:dmAdmin / p:redhatdm1!)          ="
 echo "=                                                                                ="
+echo "=  Login into Quick Loan Bank application at:                                    ="
+echo "=                                                                                ="
+echo "=    http://localhost:3000                                                       ="
+echo "=                                                                                ="
+echo "=  See README.md for general details to run the various demo cases.              ="
 echo "=                                                                                ="
 echo "=  $PRODUCT $VERSION $DEMO Setup Complete.             ="
 echo "=                                                                                ="
