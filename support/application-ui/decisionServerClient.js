@@ -2,8 +2,8 @@
 angular.module('demo', [])
 .controller('kie-server-info', function($scope, $http) {
 
-    $http.get('http://localhost:8080/kie-server/services/rest/server', {
-        headers: {'accept' : 'application/json', 'content-type' : 'application/json' ,'Authorization': 'Basic ' + btoa('dsUser:dsUser1!') }
+    $http.get('http://' + ENV.kieserver_host + ':' + ENV.kieserver_port + '/kie-server/services/rest/server', {
+        headers: {'accept' : 'application/json', 'content-type' : 'application/json' ,'Authorization': 'Basic ' + btoa(ENV.kieserver_user + ':' + ENV.kieserver_password) }
     }).
         then(function(response) {
 
@@ -22,8 +22,13 @@ angular.module('demo', [])
 
     $scope.fireRules = function(){
         console.log("fireRules! ");
-        $http.post('http://localhost:8080/kie-server/services/rest/server/containers/instances/loan-application', '{ \"lookup\": \"default-stateless-ksession\", \"commands\": [ { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Applicant\": { \"creditScore\":'+$scope.applicant.creditScore+', \"name\":\"'+$scope.applicant.name+'\", \"age\":'+$scope.applicant.age+', \"yearlyIncome\":'+$scope.applicant.yearlyIncome+' } }, \"out-identifier\":\"applicant\" } }, { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Loan\": { \"amount\":'+$scope.loan.amount+', \"duration\":'+$scope.loan.duration+' } }, \"out-identifier\":\"loan\" } }, { \"start-process\" : { \"processId\" : \"loan-application.loan-application-decision-flow\", \"parameter\" : [ ], \"out-identifier\" : null } } ]}' ,{
-        headers: {'Authorization': 'Basic ' + btoa('kieserver:kieserver1!') }
+        console.log("KIE-Server host: " + ENV.kieserver_host);
+        console.log("KIE-Server port:" + ENV.kieserver_port);
+        console.log("KIE-Server containerId: " + ENV.kieserver_containerId);
+        console.log("User: " + ENV.kieserver_user);
+        console.log("Password: " + ENV.kieserver_password );
+        $http.post('http://' + ENV.kieserver_host + ':' + ENV.kieserver_port + '/kie-server/services/rest/server/containers/instances/' + ENV.kieserver_containerId, '{ \"lookup\": \"default-stateless-ksession\", \"commands\": [ { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Applicant\": { \"creditScore\":'+$scope.applicant.creditScore+', \"name\":\"'+$scope.applicant.name+'\", \"age\":'+$scope.applicant.age+', \"yearlyIncome\":'+$scope.applicant.yearlyIncome+' } }, \"out-identifier\":\"applicant\" } }, { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Loan\": { \"amount\":'+$scope.loan.amount+', \"duration\":'+$scope.loan.duration+' } }, \"out-identifier\":\"loan\" } }, { \"start-process\" : { \"processId\" : \"loan-application.loan-application-decision-flow\", \"parameter\" : [ ], \"out-identifier\" : null } } ]}' ,{
+        headers: {'Authorization': 'Basic ' + btoa(ENV.kieserver_user + ':' + ENV.kieserver_password) }
         }).
             then(function(response) {
 

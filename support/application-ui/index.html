@@ -46,7 +46,8 @@
   <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-patternfly.js"></script>
   <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-ui-router.min.js"></script>
   <script src="http://www.patternfly.org/angular-patternfly/grunt-scripts/angular-drag-and-drop-lists.js"></script>
-  
+
+  <script src="config.js"></script>
   <script src="decisionServerClient.js"></script>
 
 </head>
@@ -139,7 +140,7 @@
 
       <div class="col-xs-6 col-sm-4 col-md-2">
         <!-- Aggregated status card -->
-        
+
       </div> <!-- /col -->
 
       <div class="col-xs-6 col-sm-4 col-md-2">
@@ -173,7 +174,7 @@
                 <h2 class="right-aligned_all-fields-required">
                     Loan Application
                 </h2>
-              </div> 
+              </div>
         <!-- Utilization Trend Card -->
         <div class="card-pf-body">
       <form class="form-horizontal" role="form">
@@ -234,9 +235,9 @@
 
 
 
-    
+
           <div class="col-xs-12 col-md-4">
-    
+
             <!-- Aggregated status card -->
             <div class="card-pf card-pf-accented card-pf-aggregate-status" style="{{displayResults}}">
 
@@ -246,7 +247,7 @@
                 </p>
               </div>
             </div>
-    
+
           </div><!-- /col -->
           <div class="col-xs-12 col-md-4" style="{{displayResults}}">
               <div class="card-pf">
@@ -258,10 +259,10 @@
                 <div class="card-pf-body">
                   <div class="progress-description" ng-repeat="message in applicationResultMessages" >
                       {{message}}
-                  </div> 
+                  </div>
                 </div>
               </div>
-      
+
             </div><!-- /col -->
 
     </div><!-- /row -->
