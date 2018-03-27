@@ -2,23 +2,9 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     less = require('gulp-less-sourcemap'),
     plumber = require('gulp-plumber'),
-    replace = require('gulp-replace'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload,
     path = require('path');
-
-//Get the KIESERVER_ROUTE from the environment variables (needed in an OpenShift environment).
-var kieserverRoute = process.env.KIESERVER_ROUTE;
-if (!kieserverRoute) {
-  kieserverRoute = 'localhost';
-}
-
-//Replace kieserver_host with route if configured.
-gulp.task('set-config', function() {
-    gulp.src('config/config.js')
-      .pipe(replace(/.*kieserver_host.*/g, '    \'kieserver_host\' : \'' + kieserverRoute + '\','))
-      .pipe(gulp.dest('./config'));
-});
 
 // Uglyfies js on to /js/minjs
 gulp.task('scripts', function(){
@@ -66,4 +52,4 @@ gulp.task('watch', function(){
 });
 
 // deploys
-gulp.task('default',  ['set-config', 'scripts', 'less','browser-sync','watch']);
+gulp.task('default',  ['scripts', 'less','browser-sync','watch']);
