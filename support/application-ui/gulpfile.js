@@ -15,9 +15,9 @@ if (!kieserverRoute) {
 
 //Replace kieserver_host with route if configured.
 gulp.task('set-config', function() {
-    gulp.src('config.js')
+    gulp.src('config/config.js')
       .pipe(replace(/.*kieserver_host.*/g, '    \'kieserver_host\' : \'' + kieserverRoute + '\','))
-      .pipe(gulp.dest('./'));
+      .pipe(gulp.dest('./config'));
 });
 
 // Uglyfies js on to /js/minjs
