@@ -1,7 +1,5 @@
 'use strict';
 
-console.log("Loading configuration.");
-
 var ENV = {
     'kieserver_host' : 'localhost',
     'kieserver_port' : '8080',
