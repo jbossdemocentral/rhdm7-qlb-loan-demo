@@ -54,11 +54,7 @@
                 <authorization>
                     <properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
                 </authorization>
-                <server-identities>
-                    <ssl>
-                        <keystore  path="/etc/kieserver-secret-volume/keystore.jks" keystore-password="mykeystorepass"/>
-                    </ssl>
-                </server-identities>
+                <!-- ##SSL## -->
             </security-realm>
         </security-realms>
         <audit-log>
@@ -94,7 +90,7 @@
         <subsystem xmlns="urn:jboss:domain:logging:3.0">
             <console-handler name="CONSOLE">
                 <formatter>
-                    <named-formatter name="COLOR-PATTERN"/>
+                    <named-formatter name="##CONSOLE-FORMATTER##"/>
                 </formatter>
             </console-handler>
             <logger category="com.arjuna">
@@ -124,7 +120,7 @@
             </formatter>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:batch-jberet:2.0">
-                 <default-job-repository name="in-memory"/>
+            <!-- ##DEFAULT_JOB_REPOSITORY## -->
             <default-thread-pool name="batch"/>
             <job-repository name="in-memory">
                 <in-memory/>
@@ -138,7 +134,7 @@
         <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:5.0">
             <datasources>
-                <datasource jta="true" jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true"> <connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE</connection-url> <driver>h2</driver> <security> <user-name>sa</user-name> <password>sa</password> </security> </datasource><!-- ##DATASOURCES## -->
+                <!-- ##DATASOURCES## -->
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
@@ -154,7 +150,7 @@
             </datasources>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:deployment-scanner:2.0">
-            <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}" auto-deploy-exploded="false"/>
+            <deployment-scanner path="deployments" relative-to="jboss.server.base.dir" scan-interval="5000" runtime-failure-causes-rollback="${jboss.deployment.scanner.rollback.on.failure:false}" auto-deploy-exploded="##AUTO_DEPLOY_EXPLODED##"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:ee:4.0">
             <spec-descriptor-property-replacement>false</spec-descriptor-property-replacement>
@@ -173,8 +169,8 @@
                 </managed-scheduled-executor-services>
             </concurrent>
             <default-bindings context-service="java:jboss/ee/concurrency/context/default"
-                              datasource="java:jboss/datasources/ExampleDS"
-                              jms-connection-factory="java:jboss/DefaultJMSConnectionFactory"
+                              <!-- ##DEFAULT_DATASOURCE## -->
+                              ##DEFAULT_JMS##
                               managed-executor-service="java:jboss/ee/concurrency/executor/default"
                               managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default"
                               managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
@@ -212,7 +208,7 @@
                     <option name="MAX_OUTBOUND_MESSAGES" value="1234" type="remoting"/>
                 </channel-creation-options>
             </remote>
-                        <timer-service thread-pool-name="default" default-data-store="default-file-store">                <data-stores>                    <file-data-store name="default-file-store" path="timer-service-data" relative-to="jboss.server.data.dir"/>                    <!-- ##DATASTORES## -->                </data-stores>            </timer-service>
+            <!-- ##TIMER_SERVICE## -->
             <thread-pools>
                 <thread-pool name="default">
                     <max-threads count="10"/>
@@ -304,16 +300,16 @@
             <stacks>
                 <stack name="udp">
                     <transport type="UDP" socket-binding="jgroups-udp"/>
-                    <protocol type="openshift.KUBE_PING" socket-binding="jgroups-mping"/>
+                    <!-- ##JGROUPS_PING_PROTOCOL## -->
                     <protocol type="MERGE3"/>
                     <protocol type="FD_SOCK"/>
                     <protocol type="FD_ALL"/>
                     <protocol type="VERIFY_SUSPECT"/>
-
+                    <!-- ##JGROUPS_ENCRYPT## -->
                     <protocol type="pbcast.NAKACK2"/>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
-                    <!--WARNING: No password defined for JGroups cluster. AUTH protocol has been disabled. Please define JGROUPS_CLUSTER_PASSWORD. -->
+                    <!-- ##JGROUPS_AUTH## -->
                     <protocol type="pbcast.GMS"/>
                     <protocol type="UFC"/>
                     <protocol type="MFC"/>
@@ -321,16 +317,16 @@
                 </stack>
                 <stack name="tcp">
                     <transport type="TCP" socket-binding="jgroups-tcp"/>
-                    <protocol type="openshift.KUBE_PING" socket-binding="jgroups-mping"/>
+                    <!-- ##JGROUPS_PING_PROTOCOL## -->
                     <protocol type="MERGE3"/>
                     <protocol type="FD_SOCK"/>
                     <protocol type="FD_ALL"/>
                     <protocol type="VERIFY_SUSPECT"/>
-
+                    <!-- ##JGROUPS_ENCRYPT## -->
                     <protocol type="pbcast.NAKACK2"/>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
-                    <!--WARNING: No password defined for JGroups cluster. AUTH protocol has been disabled. Please define JGROUPS_CLUSTER_PASSWORD. -->
+                    <!-- ##JGROUPS_AUTH## -->
                     <protocol type="pbcast.GMS"/>
                     <protocol type="MFC"/>
                     <protocol type="FRAG2"/>
@@ -354,33 +350,7 @@
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:2.0">
-                <server name="default">
-        <cluster password="${jboss.messaging.cluster.password:CHANGE ME!!}"/>
-        <security-setting name="#">
-            <role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
-        </security-setting>
-        <address-setting name="#" dead-letter-address="jms.queue.DLQ" expiry-address="jms.queue.ExpiryQueue" max-size-bytes="10485760" page-size-bytes="2097152" message-counter-history-day-limit="10" redistribution-delay="1000"/>
-        <http-connector name="http-connector" socket-binding="http" endpoint="http-acceptor"/>
-        <http-connector name="http-connector-throughput" socket-binding="http" endpoint="http-acceptor-throughput">
-            <param name="batch-delay" value="50"/>
-        </http-connector>
-        <in-vm-connector name="in-vm" server-id="0"/>
-        <http-acceptor name="http-acceptor" http-listener="default"/>
-        <http-acceptor name="http-acceptor-throughput" http-listener="default">
-            <param name="batch-delay" value="50"/>
-            <param name="direct-deliver" value="false"/>
-        </http-acceptor>
-        <in-vm-acceptor name="in-vm" server-id="0"/>
-        <broadcast-group name="bg-group1" connectors="http-connector" jgroups-channel="ee"/>
-        <discovery-group name="dg-group1" jgroups-channel="ee"/>
-        <cluster-connection name="my-cluster" address="jms" connector-name="http-connector" discovery-group="dg-group1"/>
-        <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
-        <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
-
-        <connection-factory name="InVmConnectionFactory" connectors="in-vm" entries="java:/ConnectionFactory"/>
-        <connection-factory name="RemoteConnectionFactory" ha="true" block-on-acknowledge="true" reconnect-attempts="-1" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
-        <pooled-connection-factory name="activemq-ra" transaction="xa" connectors="in-vm" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory"/>
-    </server>
+            <!-- ##MESSAGING_SUBSYSTEM_CONFIG## -->
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:modcluster:3.0">
             <mod-cluster-config advertise-socket="modcluster" connector="ajp">
@@ -541,7 +511,7 @@
                     </authorization>
                 </security-domain>
                 <!-- ##KEYCLOAK_SECURITY_DOMAIN## -->
-                <!-- no additional security domains configured --><!-- ##ADDITIONAL_SECURITY_DOMAINS## -->
+                <!-- ##ADDITIONAL_SECURITY_DOMAINS## -->
             </security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:singleton:1.0">
@@ -565,7 +535,7 @@
             <server name="default-server">
                 <ajp-listener name="ajp" socket-binding="ajp"/>
                 <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true" proxy-address-forwarding="true"/>
-                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm"/>
+                <!-- ##HTTPS_CONNECTOR## -->
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <!-- ##ACCESS_LOG_VALVE## -->
@@ -634,7 +604,7 @@
         <socket-binding name="jgroups-tcp" interface="private" port="7600"/>
         <socket-binding name="jgroups-udp" interface="private" port="55200" multicast-address="${jboss.default.multicast.address:230.0.0.4}" multicast-port="45688"/>
         <socket-binding name="modcluster" port="0" multicast-address="${jboss.modcluster.multicast.address:224.0.1.105}" multicast-port="23364"/>
-        <socket-binding name="messaging" port="5445"/><socket-binding name="messaging-throughput" port="5455"/>
+        <!-- ##MESSAGING_PORTS## -->
         <socket-binding name="txn-recovery-environment" port="4712"/>
         <socket-binding name="txn-status-manager" port="4713"/>
         <outbound-socket-binding name="mail-smtp">
