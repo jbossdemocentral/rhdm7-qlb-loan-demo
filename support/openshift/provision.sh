@@ -18,7 +18,7 @@ function usage() {
     echo " $0 --help"
     echo
     echo "Example:"
-    echo " $0 setup rhdm7-loan --project-suffix s40d"
+    echo " $0 setup rhdm7-qlb-loan --project-suffix s40d"
     echo
     echo "COMMANDS:"
     echo "   setup                    Set up the demo projects and deploy demo apps"
@@ -252,6 +252,11 @@ function import_imagestreams_and_templates() {
   oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-kieserver-https-s2i.yaml
 }
 
+# Create a patched KIE-Server image with CORS support.
+function deploy_kieserver_cors() {
+  echo_header "RHDM 7.0 KIE-Server with CORS support..."
+  oc process -f rhdm70-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="development" -p DOCKERFILE_CONTEXT=support/openshift/rhdm70-kieserver-cors -n ${PRJ[0]} | oc create -n ${PRJ[0]} -f -
+}
 
 function import_secrets_and_service_account() {
   echo_header "Importing secrets and service account."
@@ -280,6 +285,42 @@ function create_application() {
 			-p MAVEN_REPO_USERNAME="$KIE_ADMIN_USER" \
 			-p MAVEN_REPO_PASSWORD="$KIE_ADMIN_PWD" \
       -p DECISION_CENTRAL_VOLUME_CAPACITY="$ARG_PV_CAPACITY"
+
+
+  # Patch the KIE-Server to use our patched image with CORS support.
+  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm70-kieserver-cors:latest'}]"
+
+
+  echo_header "Creating Quick Loan Bank client application"
+  oc new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
+
+  # Retrieve KIE-Server route.
+  KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
+  # Set the KIESERVER_ROUTE into our application config file:
+  sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g config/config.js.orig > config/config.js.temp.1
+  sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g config/config.js.temp.1 > config/config.js.temp.2
+  mv config/config.js.temp.2 config/config.js
+  rm config/config.js.temp*
+
+  # Create config-map
+  echo ""
+  echo "Creating config-map."
+  echo ""
+  oc create configmap qlb-client-application-config-map --from-file=config/config.js
+  # Attach config-map as volume to client-application DC
+  # Use oc patch
+  echo ""
+  echo "Attaching config-map as volume to client application."
+  echo ""
+  oc patch dc/qlb-client-application -p '{"spec":{"template":{"spec":{"volumes":[{"name": "volume-qlb-client-app-1", "configMap": {"name": "qlb-client-application-config-map", "defaultMode": 420}}]}}}}'
+  oc patch dc/qlb-client-application -p '{"spec":{"template":{"spec":{"containers":[{"name": "qlb-client-application", "volumeMounts":[{"name": "volume-qlb-client-app-1","mountPath":"/opt/app-root/src/config"}]}]}}}}'
+
+  #Patch the service to set targetPort to 3000 and expose the service (which creates a route).
+  oc patch svc/qlb-client-application --type='json' -p="[{'op': 'replace', 'path': '/spec/ports/0/targetPort', 'value': 3000}]"
+  echo ""
+  echo "Creating route."
+  echo ""
+  oc expose svc/qlb-client-application
 
 }
 
@@ -398,7 +439,8 @@ case "$ARG_COMMAND" in
         if [ "$ARG_WITH_IMAGESTREAMS" = true ] ; then
            import_imagestreams_and_templates
         fi
-	      import_secrets_and_service_account
+        import_secrets_and_service_account
+        deploy_kieserver_cors
 
         create_application
 
