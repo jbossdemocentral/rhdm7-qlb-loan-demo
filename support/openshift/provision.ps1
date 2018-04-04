@@ -208,7 +208,6 @@ Function Create-Projects() {
 
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
-  #Invoke-Expression "oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/rhdm70-image-streams.yaml"
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/rhdm70-image-streams.yaml" $True "Error importing Image Streams" $True
 
   Write-Output-Header "Importing Templates"
@@ -257,30 +256,22 @@ Function Create-Application() {
   # Patch the KIE-Server to use our patched image with CORS support.
   oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm70-kieserver-cors:latest'}]"
 
-
   Write-Output-Header "Creating Quick Loan Bank client application"
-  #oc new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
   Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
-  #KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
   $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
 
   # Set the KIESERVER_ROUTE into our application config file:
-  #sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g config/config.js.orig > config/config.js.temp.1
   cat $SCRIPT_DIR/config/config.js.orig | %{$_ -replace ".*kieserver_host.*", "    'kieserver_host' : '$KIESERVER_ROUTE',"} > $SCRIPT_DIR\config\config.js.temp.1
-  #sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g config/config.js.temp.1 > config/config.js.temp.2
   cat $SCRIPT_DIR/config/config.js.temp.1 | %{$_ -replace ".*kieserver_port.*", "    'kieserver_port' : '80',"} > $SCRIPT_DIR\config\config.js.temp.2
-  #mv config/config.js.temp.1 config/config.js
   Move-Item -Path "$SCRIPT_DIR\config\config.js.temp.2" -Destination "$SCRIPT_DIR\config\config.js" -Force
-  #rm config/config.js.temp.*
   Remove-Item "$SCRIPT_DIR\config\config.js.temp.*" -Force
 
   # Create config-map
   Write-Output ""
   Write-Output "Creating config-map."
   Write-Output ""
-  #oc create configmap qlb-client-application-config-map --from-file=config/config.js
   Call-Oc "create configmap qlb-client-application-config-map --from-file=config/config.js"
 
   # Attach config-map as volume to client-application DC
