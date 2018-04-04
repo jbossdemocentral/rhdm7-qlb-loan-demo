@@ -95,7 +95,7 @@ if (-not ([string]::IsNullOrEmpty($ARG_PROJECT_SUFFIX)))
 
 $PRJ=@("rhdm7-qlb-loan-$PRJ_SUFFIX","RHDM7 Quick Loan Bank Demo","Red Hat Decision Manager 7 Quick Loan Bank Demo")
 
-$SCRIPT_DIR=$scriptName = $myInvocation.MyCommand.Path
+$SCRIPT_DIR= Split-Path $myInvocation.MyCommand.Path
 
 # KIE Parameters
 $KIE_ADMIN_USER="dmAdmin"
@@ -218,6 +218,12 @@ Function Import-ImageStreams-And-Templates() {
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-kieserver-https-s2i.yaml" $True "Error importing Template" $True
 }
 
+# Create a patched KIE-Server image with CORS support.
+Function Deploy-KieServer-Cors() {
+  Write-Output-Header "RHDM 7.0 KIE-Server with CORS support..."
+  oc process -f rhdm70-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="development" -p DOCKERFILE_CONTEXT=support/openshift/rhdm70-kieserver-cors -n $($PRJ[0]) | oc create -n $($PRJ[0]) -f -
+}
+
 Function Import-Secrets-And-Service-Account() {
   Write-Output-Header "Importing secrets and service account."
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/decisioncentral-app-secret.yaml" $True "Error importing Decision Central secret." $True
@@ -240,11 +246,62 @@ Function Create-Application() {
       + " -p KIE_ADMIN_PWD=""$KIE_ADMIN_PWD""" `
       + " -p KIE_SERVER_CONTROLLER_USER=""$KIE_SERVER_CONTROLLER_USER""" `
       + " -p KIE_SERVER_CONTROLLER_PWD=""$KIE_SERVER_CONTROLLER_PWD""" `
+      + " -p KIE_SERVER_USER=""$KIE_SERVER_USER""" `
+			+ " -p KIE_SERVER_PWD=""$KIE_SERVER_PWD""" `
       + " -p MAVEN_REPO_USERNAME=""$KIE_ADMIN_USER""" `
       + " -p MAVEN_REPO_PASSWORD=""$KIE_ADMIN_PWD""" `
       + " -p DECISION_CENTRAL_VOLUME_CAPACITY=""$ARG_PV_CAPACITY"""
 
   Call-Oc $argList $True "Error creating application." $True
+
+  # Patch the KIE-Server to use our patched image with CORS support.
+  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm70-kieserver-cors:latest'}]"
+
+
+  Write-Output-Header "Creating Quick Loan Bank client application"
+  #oc new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
+  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
+
+  # Retrieve KIE-Server route.
+  #KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
+  $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
+
+  # Set the KIESERVER_ROUTE into our application config file:
+  #sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g config/config.js.orig > config/config.js.temp.1
+  cat $SCRIPT_DIR/config/config.js.orig | %{$_ -replace ".*kieserver_host.*", "    'kieserver_host' : '$KIESERVER_ROUTE',"} > $SCRIPT_DIR\config\config.js.temp.1
+  #sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g config/config.js.temp.1 > config/config.js.temp.2
+  cat $SCRIPT_DIR/config/config.js.temp.1 | %{$_ -replace ".*kieserver_port.*", "    'kieserver_port' : '80',"} > $SCRIPT_DIR\config\config.js.temp.2
+  #mv config/config.js.temp.1 config/config.js
+  Move-Item -Path "$SCRIPT_DIR\config\config.js.temp.2" -Destination "$SCRIPT_DIR\config\config.js" -Force
+  #rm config/config.js.temp.*
+  Remove-Item "$SCRIPT_DIR\config\config.js.temp.*" -Force
+
+  # Create config-map
+  Write-Output ""
+  Write-Output "Creating config-map."
+  Write-Output ""
+  #oc create configmap qlb-client-application-config-map --from-file=config/config.js
+  Call-Oc "create configmap qlb-client-application-config-map --from-file=config/config.js"
+
+  # Attach config-map as volume to client-application DC
+  # Use oc patch
+  Write-Output ""
+  Write-Output "Attaching config-map as volume to client application."
+  Write-Output ""
+  $PATCH_ARGUMENT='{"spec":{"template":{"spec":{"volumes":[{"name": "volume-qlb-client-app-1", "configMap": {"name": "qlb-client-application-config-map", "defaultMode": 420}}]}}}}'
+  $PATCH_ARGUMENT_JSON=ConvertTo-Json $PATCH_ARGUMENT
+  oc patch dc/qlb-client-application -p $PATCH_ARGUMENT_JSON
+  $PATCH_ARGUMENT='{"spec":{"template":{"spec":{"containers":[{"name": "qlb-client-application", "volumeMounts":[{"name": "volume-qlb-client-app-1","mountPath":"/opt/app-root/src/config"}]}]}}}}'
+  $PATCH_ARGUMENT_JSON=ConvertTo-Json $PATCH_ARGUMENT
+  oc patch dc/qlb-client-application -p $PATCH_ARGUMENT_JSON
+
+  #Patch the service to set targetPort to 3000 and expose the service (which creates a route).
+  oc patch svc/qlb-client-application --type='json' -p="[{'op': 'replace', 'path': '/spec/ports/0/targetPort', 'value': 3000}]"
+  Write-Output ""
+  Write-Output "Creating route."
+  Write-Output ""
+  Call-Oc "expose svc/qlb-client-application" $True "Error exposing client application service." $True
+
 }
 
 Function Build-And-Deploy() {
@@ -397,6 +454,7 @@ switch ( $ARG_COMMAND )
     }
 
     Import-Secrets-And-Service-Account
+    Deploy-KieServer-Cors
 
     Create-Application
 
