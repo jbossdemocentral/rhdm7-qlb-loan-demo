@@ -208,25 +208,25 @@ Function Create-Projects() {
 
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/rhdm70-image-streams.yaml" $True "Error importing Image Streams" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/rhdm70-image-streams.yaml" $True "Error importing Image Streams" $True
 
   Write-Output-Header "Importing Templates"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-full.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-kieserver.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-kieserver-basic-s2i.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/templates/rhdm70-kieserver-https-s2i.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/templates/rhdm70-full.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/templates/rhdm70-kieserver.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/templates/rhdm70-kieserver-basic-s2i.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/templates/rhdm70-kieserver-https-s2i.yaml" $True "Error importing Template" $True
 }
 
 # Create a patched KIE-Server image with CORS support.
 Function Deploy-KieServer-Cors() {
   Write-Output-Header "RHDM 7.0 KIE-Server with CORS support..."
-  oc process -f rhdm70-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="development" -p DOCKERFILE_CONTEXT=support/openshift/rhdm70-kieserver-cors -n $($PRJ[0]) | oc create -n $($PRJ[0]) -f -
+  oc process -f $SCRIPT_DIR/rhdm70-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="development" -p DOCKERFILE_CONTEXT=support/openshift/rhdm70-kieserver-cors -n $($PRJ[0]) | oc create -n $($PRJ[0]) -f -
 }
 
 Function Import-Secrets-And-Service-Account() {
   Write-Output-Header "Importing secrets and service account."
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/decisioncentral-app-secret.yaml" $True "Error importing Decision Central secret." $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70-dev/kieserver-app-secret.yaml" $True "Error importing KIE-Server secret." $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/decisioncentral-app-secret.yaml" $True "Error importing Decision Central secret." $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/kieserver-app-secret.yaml" $True "Error importing KIE-Server secret." $True
 }
 
 Function Create-Application() {
