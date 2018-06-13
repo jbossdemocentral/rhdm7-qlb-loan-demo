@@ -1,21 +1,22 @@
 var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
-    less = require('gulp-less-sourcemap'),
+    less = require('gulp-less'),
     plumber = require('gulp-plumber'),
     browserSync = require('browser-sync'),
     reload = browserSync.reload,
     path = require('path');
 
 // Uglyfies js on to /js/minjs
-gulp.task('scripts', function(){
+gulp.task('scripts', function(done){
     gulp.src('js/*.js')
         .pipe(plumber())
         .pipe(uglify())
         .pipe(gulp.dest("js/minjs"));
+    done();
 });
 
 // Compiles less on to /css
-gulp.task('less', function () {
+gulp.task('less', function (done) {
     gulp.src('less/**/*.less')
         .pipe(plumber())
         .pipe(less({
@@ -28,28 +29,33 @@ gulp.task('less', function () {
         }))
         .pipe(gulp.dest('css'))
         .pipe(reload({stream:true}));
+    done();
 });
 
 // reload server
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', function(done) {
     browserSync({
         server: {
             baseDir: "./"
         }
     });
+    done();
 });
 
 // Reload all Browsers
-gulp.task('bs-reload', function () {
+gulp.task('bs-reload', function (done) {
     browserSync.reload();
+    done();
 });
 
 // watch for changes on files
-gulp.task('watch', function(){
-    gulp.watch('js/*.js', ['scripts']);
-    gulp.watch('less/*.less', ['less']);
-    gulp.watch("*.html", ['bs-reload']);
+gulp.task('watch', function(done){
+    gulp.watch('js/*.js', gulp.series('scripts'));
+    gulp.watch('less/*.less', gulp.series('less'));
+    gulp.watch("*.html", gulp.series('bs-reload'));
+    done();
 });
 
-// deploys
-gulp.task('default',  ['scripts', 'less','browser-sync','watch']);
+
+//gulp.task('default', gulp.series('scripts', 'less', 'browser-sync', 'watch'));
+gulp.task('default', gulp.series('scripts', 'less', 'browser-sync', 'watch'));

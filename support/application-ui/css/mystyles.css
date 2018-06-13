@@ -17968,7 +17968,7 @@ table.dataTable th:active {
   .find-pf-dropdown-container {
     left: 30px;
     top: -5px;
-    width: calc(70%);
+    width: calc(100% - 30px);
   }
 }
 .find-pf-dropdown-container:before,
@@ -18258,7 +18258,7 @@ table.dataTable th:active {
 }
 .nav-pf-vertical-tooltip.tooltip .tooltip-arrow {
   border-bottom-color: #fff;
-  left: calc(35%) !important;
+  left: calc(50% - 15px) !important;
 }
 .hover-secondary-nav-pf {
   width: calc(200px * 2);
@@ -19436,4 +19436,3 @@ table.dataTable th:active {
 .wizard-pf-step-alt-substep.disabled a {
   pointer-events: none;
 }
-/*# sourceMappingURL=mystyles.css.map */
