@@ -4,9 +4,9 @@ This demo project showcases the different rule authoring languages and tools ava
 
 You will be given examples of calling the rules as if using them from an application through the REST API that is exposed by the server. Furthermore, this demo provides a NodeJS client application written in AngularJS and PatternFly that showcases how web applications can consume decision services deployed on the Decision Server.
 
-A full walkthrough of this demo on an OpenShift environment is provided [here](docs/walkthrough/qlb-demo-walkthrough.adoc)
+A full walkthrough of this demo on an OpenShift environment is provided [here](docs/walkthrough/qlb-demo-walkthrough.adoc).
 
-There are three options for you to install this project: local, OpenShift and Docker
+There are three options for you to install this project: local, OpenShift and Docker.
 
 Software
 --------
