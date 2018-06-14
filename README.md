@@ -4,6 +4,8 @@ This demo project showcases the different rule authoring languages and tools ava
 
 You will be given examples of calling the rules as if using them from an application through the REST API that is exposed by the server. Furthermore, this demo provides a NodeJS client application written in AngularJS and PatternFly that showcases how web applications can consume decision services deployed on the Decision Server.
 
+A full walkthrough of this demo on an OpenShift environment is provided [here](docs/walkthrough/qlb-demo-walkthrough.adoc)
+
 There are three options for you to install this project: local, OpenShift and Docker
 
 Software
@@ -100,7 +102,7 @@ Option 1 - Install on your machine
 
    - observe the result. The Quick Loan Bank rules have fired and determined that, based on the credit score of the application, and the amount of the loan, the loan can be approved. The `approved` attribute of the `Loan` has been set to `true`.
 
-13. Start the client application by running `npm start --prefix=./support/application-ui/`. This will start the NodeJS HTTP server and open the Quick Loan Bank client application in your browser. Try to submit a new loan request using the same data as shown the JSON file at step 12. Try to enter different values to see a loan get disapproved.
+13. Navigate to the *support/application-ui/* directory. Run the command `npm install` to install the required modules. Start the client application by running `npm start`. This will start the NodeJS HTTP server and open the Quick Loan Bank client application in your browser. Try to submit a new loan request using the same data as shown the JSON file at step 12. Try to enter different values to see a loan get disapproved.
 
 14. You can change the various rules as desired, change the version of the project, and redeploy a new version to a new KIE Container (allowing you to serve multiple versions of the same rule set at the same time on the same Decision Server). You can also build a new version of the project and use the Version Configuration tab of the container definition (in the Execution Servers screen) to manage the container using the UPGRADE button to pull the new version.
 
