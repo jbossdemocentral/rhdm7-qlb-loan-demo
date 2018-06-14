@@ -257,7 +257,7 @@ Function Create-Application() {
   oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm70-kieserver-cors:latest'}]"
 
   Write-Output-Header "Creating Quick Loan Bank client application"
-  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
+  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
   $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1

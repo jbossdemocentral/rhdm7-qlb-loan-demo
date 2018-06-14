@@ -292,7 +292,7 @@ function create_application() {
 
 
   echo_header "Creating Quick Loan Bank client application"
-  oc new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#development --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
+  oc new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
 
   # Retrieve KIE-Server route.
   KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
