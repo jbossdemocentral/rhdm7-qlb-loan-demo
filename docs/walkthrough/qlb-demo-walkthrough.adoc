@@ -3,6 +3,7 @@
 :toc2:
 
 = Red Hat Decision Manager 7
+
 == Quick Loan Bank Demo - Walkthrough
 
 After your environment has been provisioned to RHPDS, you can login to the OpenShift environment using the details provided by RHPDS.
