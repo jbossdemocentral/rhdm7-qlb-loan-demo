@@ -62,7 +62,7 @@ Option 1 - Install on your machine
    - set "Parameter content type" to `application/json`.
    - set "Response content type" to `application/json`
    - use the following request as the "body" parameter. Note that the `Loan` object has its `approved` attribute set to `false`:
-
+   ```
    {
       "lookup": "default-stateless-ksession",
       "commands": [
@@ -99,7 +99,7 @@ Option 1 - Install on your machine
          }
       ]
    }
-
+   ```
    - observe the result. The Quick Loan Bank rules have fired and determined that, based on the credit score of the application, and the amount of the loan, the loan can be approved. The `approved` attribute of the `Loan` has been set to `true`.
 
 13. Navigate to the *support/application-ui/* directory. Run the command `npm install` to install the required modules. Start the client application by running `npm start`. This will start the NodeJS HTTP server and open the Quick Loan Bank client application in your browser. Try to submit a new loan request using the same data as shown the JSON file at step 12. Try to enter different values to see a loan get disapproved.
