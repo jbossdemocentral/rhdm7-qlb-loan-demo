@@ -107,7 +107,7 @@ $KIE_SERVER_PWD="kieserver1!"
 
 #OpenShift Template Parameters
 #GitHub tag referencing the image streams and templates.
-$OPENSHIFT_DM7_TEMPLATES_TAG="7.0.1.GA"
+$OPENSHIFT_DM7_TEMPLATES_TAG="7.1.0.GA"
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -212,13 +212,15 @@ Function Create-Projects() {
 
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm70-image-streams.yaml" $True "Error importing Image Streams" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm71-image-streams.yaml" $True "Error importing Image Streams" $True
+
+  Write-Output-Header "Patching the ImageStreams"
+  oc patch is/rhdm71-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm71-decisioncentral-openshift:1.0'}]"
+  oc patch is/rhdm71-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm71-kieserver-openshift:1.0'}]"
 
   Write-Output-Header "Importing Templates"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm70-full.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm70-kieserver.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm70-kieserver-basic-s2i.yaml" $True "Error importing Template" $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm70-kieserver-https-s2i.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm71-authoring.yaml" $True "Error importing Template" $True
+  
 }
 
 # Create a patched KIE-Server image with CORS support.
@@ -229,8 +231,8 @@ Function Deploy-KieServer-Cors() {
 
 Function Import-Secrets-And-Service-Account() {
   Write-Output-Header "Importing secrets and service account."
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/decisioncentral-app-secret.yaml" $True "Error importing Decision Central secret." $True
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/rhdm70/kieserver-app-secret.yaml" $True "Error importing KIE-Server secret." $True
+  oc process -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/example-app-secret-template.yaml -p SECRET_NAME=decisioncentral-app-secret | oc create -f -
+  oc process -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/example-app-secret-template.yaml -p SECRET_NAME=kieserver-app-secret | oc create -f -
 }
 
 Function Create-Application() {
@@ -242,13 +244,15 @@ Function Create-Application() {
     $IMAGE_STREAM_NAMESPACE=$($PRJ[0])
   }
 
-  $argList = "new-app --template=rhdm70-full-persistent"`
+  $argList = "new-app --template=rhdm71-authoring"`
       + " -p APPLICATION_NAME=""$ARG_DEMO""" `
       + " -p IMAGE_STREAM_NAMESPACE=""$IMAGE_STREAM_NAMESPACE""" `
       + " -p KIE_ADMIN_USER=""$KIE_ADMIN_USER""" `
       + " -p KIE_ADMIN_PWD=""$KIE_ADMIN_PWD""" `
       + " -p KIE_SERVER_CONTROLLER_USER=""$KIE_SERVER_CONTROLLER_USER""" `
       + " -p KIE_SERVER_CONTROLLER_PWD=""$KIE_SERVER_CONTROLLER_PWD""" `
+      + " -p DECISION_CENTRAL_HTTPS_SECRET=""decisioncentral-app-secret""" `
+      + " -p KIE_SERVER_HTTPS_SECRET=""kieserver-app-secret""" `
       + " -p KIE_SERVER_USER=""$KIE_SERVER_USER""" `
 			+ " -p KIE_SERVER_PWD=""$KIE_SERVER_PWD""" `
       + " -p MAVEN_REPO_USERNAME=""$KIE_ADMIN_USER""" `

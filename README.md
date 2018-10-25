@@ -12,8 +12,8 @@ Software
 --------
 The following software is required to install and run this demo on your local machine or in Docker:
 - [JBoss EAP 7.1 zip](https://developers.redhat.com/download-manager/file/jboss-eap-7.1.0.zip)
-- [Red Hat Decision Manager 7.0.0.GA Decision Central deployable for EAP 7](https://developers.redhat.com/download-manager/file/rhdm-7.0.0.GA-decision-central-eap7-deployable.zip)
-- [Red Hat Decision Manager: KIE-Server 7.0.0.GA deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.0.0.GA-kie-server-ee7.zip)
+- [Red Hat Decision Manager: Decision Central 7.1.0 deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.1.0-decision-central-eap7-deployable.zip)
+- [Red Hat Decision Manager: KIE-Server 7.1.0 deployable for EE7](https://developers.redhat.com/download-manager/file/rhdm-7.1.0-kie-server-ee7.zip)	
 - npm: The package manager of the Node JavaScript platform. Depending on  your operating system, there are different ways to install nodejs (which includes npm), for example:
    - Linux: use your platform's package manager to install 'nodejs'
    - macOS: use _brew_ to install 'nodejs', or use the [macOS nodejs installer](https://nodejs.org/en/download/)
@@ -216,7 +216,8 @@ Released versions
 -----------------
 See the tagged releases for the following versions of the product:
 
-- v1.0 Red Hat Decision Manager 7.0.0.GA
+- v1.1 - Red Hat Decision Manager 7.1.0.GA
+- v1.0 - Red Hat Decision Manager 7.0.0.GA
 
 ![Red Hat Decision Manager 7](./docs/demo-images/rhdm7.png)
 
