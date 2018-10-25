@@ -305,16 +305,16 @@ function create_application() {
   # Retrieve KIE-Server route.
   KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
   # Set the KIESERVER_ROUTE into our application config file:
-  sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g config/config.js.orig > config/config.js.temp.1
-  sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g config/config.js.temp.1 > config/config.js.temp.2
-  mv config/config.js.temp.2 config/config.js
-  rm config/config.js.temp*
+  sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g $SCRIPT_DIR/config/config.js.orig > $SCRIPT_DIR/config/config.js.temp.1
+  sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g $SCRIPT_DIR/config/config.js.temp.1 > $SCRIPT_DIR/config/config.js.temp.2
+  mv $SCRIPT_DIR/config/config.js.temp.2 $SCRIPT_DIR/config/config.js
+  rm $SCRIPT_DIR/config/config.js.temp*
 
   # Create config-map
   echo ""
   echo "Creating config-map."
   echo ""
-  oc create configmap qlb-client-application-config-map --from-file=config/config.js
+  oc create configmap qlb-client-application-config-map --from-file=$SCRIPT_DIR/config/config.js
   # Attach config-map as volume to client-application DC
   # Use oc patch
   echo ""
