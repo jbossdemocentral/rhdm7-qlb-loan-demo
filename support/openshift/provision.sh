@@ -260,8 +260,8 @@ function import_imagestreams_and_templates() {
 
 # Create a patched KIE-Server image with CORS support.
 function deploy_kieserver_cors() {
-  echo_header "RHDM 7.0 KIE-Server with CORS support..."
-  oc process -f $SCRIPT_DIR/rhdm70-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm70-kieserver-cors -n ${PRJ[0]} | oc create -n ${PRJ[0]} -f -
+  echo_header "RHDM 7.1 KIE-Server with CORS support..."
+  oc process -f $SCRIPT_DIR/rhdm71-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm71-kieserver-cors -n ${PRJ[0]} | oc create -n ${PRJ[0]} -f -
 }
 
 function import_secrets_and_service_account() {
@@ -296,7 +296,7 @@ function create_application() {
 
 
   # Patch the KIE-Server to use our patched image with CORS support.
-  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm70-kieserver-cors:latest'}]"
+  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm71-kieserver-cors:latest'}]"
 
 
   echo_header "Creating Quick Loan Bank client application"
