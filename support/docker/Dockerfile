@@ -39,7 +39,7 @@ RUN unzip -qo /opt/jboss/$EAP_ARCHIVE -d $HOME && \
 COPY support/rhdm7-demo-niogit $JBOSS_HOME/bin/.niogit
 # Clone the rhdm7-qlb-loan-demo-repo repository
 USER root
-RUN rm -rf $JBOSS_HOME/bin/.niogit/myrepo.git && git clone --bare https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo.git $JBOSS_HOME/bin/.niogit/myrepo.git
+RUN rm -rf $JBOSS_HOME/bin/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git && git clone --bare https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo.git $JBOSS_HOME/bin/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git
 USER 1000
 
 # Create users

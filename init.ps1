@@ -221,8 +221,8 @@ If (! $o) {
   }
 }
 # Copy the repo to the JBoss BPMSuite installation directory.
-Remove-Item "$JBOSS_HOME\bin\.niogit\myrepo.git" -Force -Recurse
-Copy-Item "$PROJECT_GIT_DIR\rhdm7-qlb-loan-demo-repo.git" "$SERVER_BIN\.niogit\myrepo.git" -force -recurse
+Remove-Item "$JBOSS_HOME\bin\.niogit\MySpace\rhdm7-qlb-loan-demo-repo.git" -Force -Recurse
+Copy-Item "$PROJECT_GIT_DIR\rhdm7-qlb-loan-demo-repo.git" "$SERVER_BIN\.niogit\MySpace\rhdm7-qlb-loan-demo-repo.git" -force -recurse
 
 ################################# End setup demo projects ##########################################
 

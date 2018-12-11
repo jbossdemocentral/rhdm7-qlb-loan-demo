@@ -199,8 +199,8 @@ else
     exit 1
   fi
 fi
-# Copy the repo to the JBoss BPMSuite installation directory.
-rm -rf $JBOSS_HOME/bin/.niogit/myrepo.git && cp -R $PROJECT_GIT_DIR/rhdm7-qlb-loan-demo-repo.git $SERVER_BIN/.niogit/myrepo.git
+# Copy the repo to the Red Hat Decision Manager installation directory.
+rm -rf $JBOSS_HOME/bin/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git && cp -R $PROJECT_GIT_DIR/rhdm7-qlb-loan-demo-repo.git $SERVER_BIN/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git
 
 echo "  - setting up standalone.xml configuration adjustments..."
 echo
