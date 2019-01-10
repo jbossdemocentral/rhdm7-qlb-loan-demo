@@ -166,7 +166,7 @@ KIE_SERVER_PWD=kieserver1!
 
 #OpenShift Template Parameters
 #GitHub tag referencing the image streams and templates.
-OPENSHIFT_DM7_TEMPLATES_TAG=7.1.0.GA
+OPENSHIFT_DM7_TEMPLATES_TAG=7.2.0.GA
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -247,21 +247,21 @@ function create_projects() {
 
 function import_imagestreams_and_templates() {
   echo_header "Importing Image Streams"
-  oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm71-image-streams.yaml
+  oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm72-image-streams.yaml
 
   echo_header "Patching the ImageStreams"
-  oc patch is/rhdm71-decisioncentral-openshift --type='json' -p '[{"op": "replace", "path": "/spec/tags/0/from/name", "value": "registry.access.redhat.com/rhdm-7/rhdm71-decisioncentral-openshift:1.0"}]'
-  oc patch is/rhdm71-kieserver-openshift --type='json' -p '[{"op": "replace", "path": "/spec/tags/0/from/name", "value": "registry.access.redhat.com/rhdm-7/rhdm71-kieserver-openshift:1.0"}]'
+  oc patch is/rhdm72-decisioncentral-openshift --type='json' -p '[{"op": "replace", "path": "/spec/tags/0/from/name", "value": "registry.access.redhat.com/rhdm-7/rhdm72-decisioncentral-openshift:1.0"}]'
+  oc patch is/rhdm72-kieserver-openshift --type='json' -p '[{"op": "replace", "path": "/spec/tags/0/from/name", "value": "registry.access.redhat.com/rhdm-7/rhdm72-kieserver-openshift:1.0"}]'
 
   echo_header "Importing Templates"
-  oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm71-authoring.yaml
+  oc create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm72-authoring.yaml
 }
 
 
 # Create a patched KIE-Server image with CORS support.
 function deploy_kieserver_cors() {
   echo_header "RHDM 7.1 KIE-Server with CORS support..."
-  oc process -f $SCRIPT_DIR/rhdm71-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm71-kieserver-cors -n ${PRJ[0]} | oc create -n ${PRJ[0]} -f -
+  oc process -f $SCRIPT_DIR/rhdm72-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm72-kieserver-cors -n ${PRJ[0]} | oc create -n ${PRJ[0]} -f -
 }
 
 function import_secrets_and_service_account() {
@@ -279,7 +279,7 @@ function create_application() {
     IMAGE_STREAM_NAMESPACE=${PRJ[0]}
   fi
 
-  oc new-app --template=rhdm71-authoring \
+  oc new-app --template=rhdm72-authoring \
 			-p APPLICATION_NAME="$ARG_DEMO" \
 			-p IMAGE_STREAM_NAMESPACE="$IMAGE_STREAM_NAMESPACE" \
 			-p KIE_ADMIN_USER="$KIE_ADMIN_USER" \
@@ -296,7 +296,7 @@ function create_application() {
 
 
   # Patch the KIE-Server to use our patched image with CORS support.
-  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm71-kieserver-cors:latest'}]"
+  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm72-kieserver-cors:latest'}]"
 
 
   echo_header "Creating Quick Loan Bank client application"
