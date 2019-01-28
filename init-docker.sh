@@ -1,21 +1,5 @@
 #!/bin/sh
-DEMO="Quick Loan Bank Demo"
-AUTHORS="Red Hat"
-PROJECT="git@github.com:jbossdemocentral/rhdm7-qlb-loan-demo.git"
-PRODUCT="Red Hat Decision Manager"
-TARGET=./target
-JBOSS_HOME=$TARGET/jboss-eap-7.1
-SERVER_DIR=$JBOSS_HOME/standalone/deployments
-SERVER_CONF=$JBOSS_HOME/standalone/configuration/
-SERVER_BIN=$JBOSS_HOME/bin
-SRC_DIR=./installs
-SUPPORT_DIR=./support
-DM_VERSION=7.1.0
-DM_DECISION_CENTRAL=rhdm-$DM_VERSION-decision-central-eap7-deployable.zip
-DM_KIE_SERVER=rhdm-$DM_VERSION-kie-server-ee7.zip
-EAP=jboss-eap-7.1.0.zip
-#EAP_PATCH=jboss-eap-6.4.7-patch.zip
-VERSION=7.1
+. init-properties.sh
 
 # wipe screen.
 clear
@@ -90,7 +74,7 @@ cp support/docker/.dockerignore .
 echo Starting Docker builds.
 echo
 
-docker build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo .
+docker build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo --build-arg DM_VERSION=$DM_VERSION --build-arg DM_DECISION_CENTRAL=$DM_DECISION_CENTRAL --build-arg DM_KIE_SERVER=$DM_KIE_SERVER --build-arg EAP=$EAP --build-arg JBOSS_EAP=$JBOSS_EAP --build-arg PROJECT_GIT_REPO=$PROJECT_GIT_REPO .
 docker build --no-cache -t jbossdemocentral/rhdm7-qlb-loan-demo-ui -f Dockerfile-ui .
 
 if [ $? -ne 0 ]; then

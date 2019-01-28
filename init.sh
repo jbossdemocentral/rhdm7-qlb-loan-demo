@@ -1,22 +1,8 @@
 #!/bin/sh
-DEMO="Quick Loan Bank Demo"
-AUTHORS="Red Hat"
-PROJECT="git@github.com:jbossdemocentral/rhdm7-qlb-loan-demo.git"
-PRODUCT="Red Hat Decision Manager"
-TARGET=./target
-JBOSS_HOME=$TARGET/jboss-eap-7.1
-SERVER_DIR=$JBOSS_HOME/standalone/deployments
-SERVER_CONF=$JBOSS_HOME/standalone/configuration/
-SERVER_BIN=$JBOSS_HOME/bin
-SRC_DIR=./installs
-SUPPORT_DIR=./support
-DM_VERSION=7.1.0
-DM_DECISION_CENTRAL=rhdm-$DM_VERSION-decision-central-eap7-deployable.zip
-DM_KIE_SERVER=rhdm-$DM_VERSION-kie-server-ee7.zip
-EAP=jboss-eap-7.1.0.zip
-#EAP_PATCH=jboss-eap-6.4.7-patch.zip
-VERSION=7.1
-PROJECT_GIT_REPO=https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo
+. init-properties.sh
+
+# Additional properties
+PROJECT_GIT_BRANCH=master
 PROJECT_GIT_DIR=./support/demo_project_git
 OFFLINE_MODE=false
 
@@ -177,18 +163,26 @@ $JBOSS_HOME/bin/add-user.sh -a -r ApplicationRealm -u kieserver -p kieserver1! -
 echo "  - setting up demo projects..."
 echo
 # Copy the default (internal) BPMSuite repo's.
-cp -r $SUPPORT_DIR/rhdm7-demo-niogit $SERVER_BIN/.niogit
+rm -rf $SERVER_BIN/.niogit && mkdir -p $SERVER_BIN/.niogit && cp -r $SUPPORT_DIR/rhdm7-demo-niogit/* $SERVER_BIN/.niogit
 # Copy the demo project repo.
 if ! $OFFLINE_MODE
 then
   # Not in offline mode, so downloading the latest repo. We first download the repo in a temp dir and we only delete the old, cached repo, when the download is succesful.
   echo "  - cloning the project's Git repo from: $PROJECT_GIT_REPO"
   echo
-  rm -rf ./target/temp && git clone --bare $PROJECT_GIT_REPO ./target/temp/rhdm7-qlb-loan-demo-repo.git || { echo; echo >&2 "Error cloning the project's Git repo. If there is no Internet connection available, please run this script in 'offline-mode' ('-o') to use a previously downloaded and cached version of the project's Git repo... Aborting"; echo; exit 1; }
+#  rm -rf ./target/temp && git clone --bare $PROJECT_GIT_REPO ./target/temp/bpms-specialtripsagency.git || { echo; echo >&2 "Error cloning the project's Git repo. If there is no Internet connection available, please run this script in 'offline-mode' ('-o') to use a previously downloaded and cached version of the project's Git repo... Aborting"; echo; exit 1; }
+  rm -rf ./target/temp && git clone -b $PROJECT_GIT_BRANCH --single-branch $PROJECT_GIT_REPO ./target/temp/$PROJECT_GIT_REPO_NAME || { echo; echo >&2 "Error cloning the project's Git repo. If there is no Internet connection available, please run this script in 'offline-mode' ('-o') to use a previously downloaded and cached version of the project's Git repo... Aborting"; echo; exit 1; }
+  pushd ./target/temp/$PROJECT_GIT_REPO_NAME
+  # rename the checked-out branch to master.
+  echo "Renaming cloned branch '$PROJECT_GIT_BRANCH' to 'master'."
+  git branch -m $PROJECT_GIT_BRANCH master
+  popd
 
-  echo "  - replacing cached project git repo: $PROJECT_GIT_DIR/rhdm7-loan-demo-repo.git"
+  echo "  - replacing cached project git repo: $PROJECT_GIT_DIR/$PROJECT_GIT_REPO_NAME"
   echo
-  rm -rf $PROJECT_GIT_DIR/rhdm7-qlb-loan-demo-repo.git && mkdir -p $PROJECT_GIT_DIR && cp -R target/temp/rhdm7-qlb-loan-demo-repo.git $PROJECT_GIT_DIR/rhdm7-qlb-loan-demo-repo.git && rm -rf ./target/temp
+#  rm -rf $PROJECT_GIT_DIR/bpms-specialtripsagency.git && mkdir -p $PROJECT_GIT_DIR && cp -R target/temp/bpms-specialtripsagency.git $PROJECT_GIT_DIR/bpms-specialtripsagency.git && rm -rf ./target/temp
+  # Make a bare clone of the Git repo.
+  rm -rf $PROJECT_GIT_DIR/$PROJECT_GIT_REPO_NAME && mkdir -p $PROJECT_GIT_DIR && git clone --bare target/temp/$PROJECT_GIT_REPO_NAME $PROJECT_GIT_DIR/$PROJECT_GIT_REPO_NAME && rm -rf ./target/temp
 else
   echo "  - running in offline-mode, using cached project's Git repo."
   echo
@@ -199,8 +193,8 @@ else
     exit 1
   fi
 fi
-# Copy the repo to the Red Hat Decision Manager installation directory.
-rm -rf $JBOSS_HOME/bin/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git && cp -R $PROJECT_GIT_DIR/rhdm7-qlb-loan-demo-repo.git $SERVER_BIN/.niogit/MySpace/rhdm7-qlb-loan-demo-repo.git
+# Copy the repo to the JBoss BPMSuite installation directory.
+rm -rf $SERVER_BIN/.niogit/$NIOGIT_PROJECT_GIT_REPO && cp -R $PROJECT_GIT_DIR/$PROJECT_GIT_REPO_NAME $SERVER_BIN/.niogit/$NIOGIT_PROJECT_GIT_REPO
 
 echo "  - setting up standalone.xml configuration adjustments..."
 echo
