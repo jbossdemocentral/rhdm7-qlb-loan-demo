@@ -213,10 +213,13 @@ Function Create-Projects() {
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm72-image-streams.yaml" $True "Error importing Image Streams" $True
+  # Import RHEL Image Streams to import NodeJS, so we can patch the registry location.
+  Call-Oc "create -f https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json" $True "Error importing Image Streams" $True
 
   Write-Output-Header "Patching the ImageStreams"
   oc patch is/rhdm72-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm72-decisioncentral-openshift:1.0'}]"
   oc patch is/rhdm72-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm72-kieserver-openshift:1.0'}]"
+  oc patch is/nodejs --type='json' -p "[{'op': 'replace', 'path': ''/spec/tags/3/from/name', 'value': 'registry.access.redhat.com/rhscl/nodejs-6-rhel7:latest'}]"
 
   Write-Output-Header "Importing Templates"
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm72-authoring.yaml" $True "Error importing Template" $True
@@ -265,7 +268,7 @@ Function Create-Application() {
   oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm72-kieserver-cors:latest'}]"
 
   Write-Output-Header "Creating Quick Loan Bank client application"
-  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
+  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development --allow-missing-imagestream-tags" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
   $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
