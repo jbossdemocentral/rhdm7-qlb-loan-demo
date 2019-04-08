@@ -1,5 +1,5 @@
 #!/bin/sh
-. init-properties.sh
+. ./init-properties.sh
 
 # Additional properties
 PROJECT_GIT_BRANCH=master
