@@ -33,6 +33,10 @@ objects:
         ref: ${DOCKERFILE_REF}
       type: Git
     strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: rhdm73-kieserver-openshift:1.0
       type: Docker
     triggers:
     - type: ConfigChange
