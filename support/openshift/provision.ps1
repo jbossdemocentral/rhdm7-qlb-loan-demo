@@ -108,6 +108,7 @@ $KIE_SERVER_PWD="kieserver1!"
 #OpenShift Template Parameters
 #GitHub tag referencing the image streams and templates.
 $OPENSHIFT_DM7_TEMPLATES_TAG="7.3.0.GA"
+$IMAGE_STREAM_TAG="1.0"
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -214,16 +215,46 @@ Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm73-image-streams.yaml" $True "Error importing Image Streams" $True
   # Import RHEL Image Streams to import NodeJS, so we can patch the registry location.
-  Call-Oc "create -f https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json" $True "Error importing Image Streams" $True
+  #Call-Oc "create -f https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json" $True "Error importing Image Streams" $True
+  Call-OC "create -f $SCRIPT_DIR/image-streams-nodejs6.json" $True "Error importing Image Streams" $True
 
-  Write-Output-Header "Patching the ImageStreams"
-  oc patch is/rhdm73-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-decisioncentral-openshift:1.0'}]"
-  oc patch is/rhdm73-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-kieserver-openshift:1.0'}]"
-  oc patch is/nodejs --type='json' -p "[{'op': 'replace', 'path': ''/spec/tags/3/from/name', 'value': 'registry.access.redhat.com/rhscl/nodejs-6-rhel7:latest'}]"
+  Write-Output ""
+  Write-Output "Fetching ImageStreams from registry."
+
+  Start-Sleep -s 10
+
+  #  Explicitly import the images. This is to overcome a problem where the image import gets a 500 error from registry.redhat.io when we deploy multiple containers at once.
+  Call-Oc "import-image rhdm73-decisioncentral-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-Oc "import-image rhdm73-kieserver-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-OC "import-image nodejs:6 --confirm -n $($PRJ[0])" $True "Error fetching Image Streams"
+
+  #Write-Output-Header "Patching the ImageStreams"
+  #oc patch is/rhdm73-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-decisioncentral-openshift:1.0'}]"
+  #oc patch is/rhdm73-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-kieserver-openshift:1.0'}]"
 
   Write-Output-Header "Importing Templates"
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm73-authoring.yaml" $True "Error importing Template" $True
 
+}
+
+Function Create-Rhn-Secret-For-Pull() {
+
+  Write-Output ""
+  Write-Output "########################################## Login Required ##########################################"
+  Write-Output "# The new Red Hat Image Registry requires users to login with their Red Hat Network (RHN) account. #"
+  Write-Output "# If you do not have an RHN account yet, you can create one at https://developers.redhat.com       #"
+  Write-Output "####################################################################################################"
+  Write-Output ""
+
+  $RHN_USERNAME = Read-Host "Enter RHN username"
+  $RHN_PASSWORD_SECURED = Read-Host "Enter RHN password" -AsSecureString
+  $RHN_EMAIL = Read-Host "Enter e-mail address"
+
+  $BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($RHN_PASSWORD_SECURED)
+  $RHN_PASSWORD = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+
+  oc create secret docker-registry red-hat-container-registry --docker-server=registry.redhat.io --docker-username=$RHN_USERNAME --docker-password=$RHN_PASSWORD --docker-email=$RHN_EMAIL
+  oc secrets link builder red-hat-container-registry --for=pull
 }
 
 # Create a patched KIE-Server image with CORS support.
@@ -268,7 +299,7 @@ Function Create-Application() {
   oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm73-kieserver-cors:latest'}]"
 
   Write-Output-Header "Creating Quick Loan Bank client application"
-  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development --allow-missing-imagestream-tags" $True "Error creating client application." $True
+  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
   $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
@@ -283,7 +314,7 @@ Function Create-Application() {
   Write-Output ""
   Write-Output "Creating config-map."
   Write-Output ""
-  Call-Oc "create configmap qlb-client-application-config-map --from-file=config/config.js"
+  Call-Oc "create configmap qlb-client-application-config-map --from-file=$SCRIPT_DIR/config/config.js"
 
   # Attach config-map as volume to client-application DC
   # Use oc patch
@@ -450,7 +481,7 @@ switch ( $ARG_COMMAND )
     Print-Info
     #Pre-Condition-Check
     Create-Projects
-
+    Create-Rhn-Secret-For-Pull
     if ($ARG_WITH_IMAGESTREAMS) {
       Import-ImageStreams-And-Templates
     }

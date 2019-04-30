@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/rhdm-7/rhdm73-kieserver-openshift:1.0
+FROM registry.redhat.io/rhdm-7/rhdm73-kieserver-openshift:1.0
 
 ADD ./contrib/standalone-openshift.xml /opt/eap/standalone/configuration/standalone-openshift.xml
 USER root
