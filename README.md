@@ -40,14 +40,14 @@ Option 1 - Install on your machine
 
 7. The project has simple data model (Loan & Applicant) and single decision table (loan-application) which contains the loan approval rule set.
 
-8. Build and deploy version 1.0 of the project. Click on the "Build and Deploy" in the upper right corner.
+8. Build and deploy version 1.0 of the project. Click on the "Build & Install" from "Build" menu and then "Deploy" in the upper right corner.
 
 9. Go to "Menu -> Deploy -> Execution Servers" repository to see the loan-application_1.0 KIE Container deployed on the Decision Server.
 
 10. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at: http://localhost:8080/kie-server/docs
 
 11. In the Swagger UI:
-   - navigate to "KIE Server :: Core"
+   - navigate to "KIE Server and KIE containers"
    - expand the "GET" operation for resource "/server/containers"
    - click on "Try it out"
    - leave the parameters blank and click on "Execute"
@@ -55,8 +55,8 @@ Option 1 - Install on your machine
    - observe the response, which lists the KIE Containers deployed on the server and their status (STARTED, STOPPED).
 
 12. We can use the Swagger UI to test our Loan Approval Decision Service. In the Swagger UI:
-   - navigate to "Rules evalutation :: BRM"
-   - expand the "POST" operation for resource "/server/containers/instances/{id}"
+   - navigate to "KIE session assets"
+   - expand the "POST" operation for resource "/server/containers/instances/{containerId}"
    - click on "Try it out"
    - set the "id" parameter to the name of the KIE Container that hosts our rules, in this case `loan-application_1.0`.
    - set "Parameter content type" to `application/json`.
@@ -129,9 +129,9 @@ This installation option will install the Decision Manager 7 and Decision Servic
 
 3. Login to your OpenShift console. For a local OpenShift installation this is usually: https://{host}:8443/console
 
-4. Open the project "RHDM7 Quick Loan Bank Demo". Open the "Overview". Wait until the 2 pods, "rhdm7-loan-rhdmcentr" and "rhdm7-loan-kieserver" have been deployed.
+4. Open the project "RHDM7 Quick Loan Bank Demo". Open the "Overview". Wait until the 2 pods, "rhdm7-qlb-loan-rhdmcentr" and "rhdm7-qlb-loan-kieserver" have been deployed.
 
-5. Open the "Applications -> Routes" screen. Click on the "Hostname" value next to "rhdm7-loan-rhdmcentr". This opens the Decision Central console.
+5. Open the "Applications -> Routes" screen. Click on the "Hostname" value next to "rhdm7-qlb-loan-rhdmcentr". This opens the Decision Central console.
 
 6. Login to Decision Central:
 
@@ -146,12 +146,12 @@ This installation option will install the Decision Manager 7 and Decision Servic
 
 10. The project has simple data model (Loan & Applicant) and single decision table (loan-application) which contains the loan approval rule set.
 
-11. Build and deploy version 1.0 of the project. Click on the "Build and Deploy" in the upper right corner.
+11. Build and deploy version 1.0 of the project. Click on the "Build & Install" from "Build" menu and then "Deploy" in the upper right corner.
 
 12. Go to "Menu -> Deploy -> Execution Servers" repository to see the loan-application_1.0 KIE Container deployed on the Decision Server.
 
-13. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at. To open the Swagger UI, go back to
-the OpenShift console, and go to the "Applications - Routes" screen. Copy the "Hostname" value next to "rhdm7-loan-kieserver". Paste the URL in a browser tab
+13. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server. To open the Swagger UI, go back to
+the OpenShift console, and go to the "Applications - Routes" screen. Copy the "Hostname" value next to "rhdm7-qlb-loan-kieserver". Paste the URL in a browser tab
 and add "/docs" to the URL. This will show the Swagger UI.
 
 14. Follow instructions 11 and 12 from above "Option 1- Install on your machine".
