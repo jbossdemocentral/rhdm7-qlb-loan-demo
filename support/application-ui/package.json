@@ -18,6 +18,7 @@
     "gulp-uglify": "^1.5.4"
   },
   "dependencies": {
+    "angular-patternfly": "^5.0.1",
     "patternfly": "^3.23.2"
   }
 }
