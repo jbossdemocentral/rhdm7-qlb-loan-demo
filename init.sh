@@ -40,7 +40,7 @@ done
 echo
 echo "#################################################################"
 echo "##                                                             ##"
-echo "##  Setting up the ${DEMO}       ##"
+echo "##  Setting up the ${DEMO}                        ##"
 echo "##                                                             ##"
 echo "##                                                             ##"
 echo "##     ####  #   # ####    #   #   #####    #   #              ##"
@@ -53,7 +53,7 @@ echo "##  brought to you by,                                         ##"
 echo "##             ${AUTHORS}                                         ##"
 echo "##                                                             ##"
 echo "##                                                             ##"
-echo "##  ${PROJECT}      ##"
+echo "##  ${PROJECT}    ##"
 echo "##                                                             ##"
 echo "#################################################################"
 echo

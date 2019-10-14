@@ -105,10 +105,10 @@ $KIE_SERVER_CONTROLLER_PWD="kieserver1!"
 $KIE_SERVER_USER="kieserver"
 $KIE_SERVER_PWD="kieserver1!"
 
-#OpenShift Template Parameters
-#GitHub tag referencing the image streams and templates.
-$OPENSHIFT_DM7_TEMPLATES_TAG="7.3.0.GA"
+# Version Configuration Parameters
+$OPENSHIFT_DM7_TEMPLATES_TAG="7.5.0.GA"
 $IMAGE_STREAM_TAG="1.0"
+$DM7_VERSION="75"
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -213,7 +213,7 @@ Function Create-Projects() {
 
 Function Import-ImageStreams-And-Templates() {
   Write-Output-Header "Importing Image Streams"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm73-image-streams.yaml" $True "Error importing Image Streams" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm$DM7_VERSION-image-streams.yaml" $True "Error importing Image Streams" $True
   # Import RHEL Image Streams to import NodeJS, so we can patch the registry location.
   #Call-Oc "create -f https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json" $True "Error importing Image Streams" $True
   Call-OC "create -f $SCRIPT_DIR/image-streams-nodejs6.json" $True "Error importing Image Streams" $True
@@ -224,8 +224,8 @@ Function Import-ImageStreams-And-Templates() {
   Start-Sleep -s 10
 
   #  Explicitly import the images. This is to overcome a problem where the image import gets a 500 error from registry.redhat.io when we deploy multiple containers at once.
-  Call-Oc "import-image rhdm73-decisioncentral-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
-  Call-Oc "import-image rhdm73-kieserver-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-Oc "import-image rhdm$DM7_VERSION-decisioncentral-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
+  Call-Oc "import-image rhdm$DM7_VERSION-kieserver-openshift:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
   Call-OC "import-image nodejs:6 --confirm -n $($PRJ[0])" $True "Error fetching Image Streams"
 
   #Write-Output-Header "Patching the ImageStreams"
@@ -233,7 +233,7 @@ Function Import-ImageStreams-And-Templates() {
   #oc patch is/rhdm73-kieserver-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-kieserver-openshift:1.0'}]"
 
   Write-Output-Header "Importing Templates"
-  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm73-authoring.yaml" $True "Error importing Template" $True
+  Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/templates/rhdm$DM7_VERSION-authoring.yaml" $True "Error importing Template" $True
 
 }
 
@@ -260,7 +260,7 @@ Function Create-Rhn-Secret-For-Pull() {
 # Create a patched KIE-Server image with CORS support.
 Function Deploy-KieServer-Cors() {
   Write-Output-Header "RHDM 7.0 KIE-Server with CORS support..."
-  oc process -f $SCRIPT_DIR/rhdm73-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm73-kieserver-cors -n $($PRJ[0]) | oc create -n $($PRJ[0]) -f -
+  oc process -f $SCRIPT_DIR/rhdm$DM7_VERSION-kieserver-cors.yaml -p DOCKERFILE_REPOSITORY="http://www.github.com/jbossdemocentral/rhdm7-qlb-loan-demo" -p DOCKERFILE_REF="master" -p DOCKERFILE_CONTEXT=support/openshift/rhdm$DM7_VERSION-kieserver-cors -n $($PRJ[0]) | oc create -n $($PRJ[0]) -f -
 }
 
 Function Import-Secrets-And-Service-Account() {
@@ -278,7 +278,7 @@ Function Create-Application() {
     $IMAGE_STREAM_NAMESPACE=$($PRJ[0])
   }
 
-  $argList = "new-app --template=rhdm73-authoring"`
+  $argList = "new-app --template=rhdm$DM7_VERSION-authoring"`
       + " -p APPLICATION_NAME=""$ARG_DEMO""" `
       + " -p IMAGE_STREAM_NAMESPACE=""$IMAGE_STREAM_NAMESPACE""" `
       + " -p KIE_ADMIN_USER=""$KIE_ADMIN_USER""" `
@@ -295,8 +295,12 @@ Function Create-Application() {
 
   Call-Oc $argList $True "Error creating application." $True
 
+  # Disable the OpenShift Startup Strategy and revert to the old Controller Strategy
+  oc set env dc/$ARG_DEMO-rhpamcentr KIE_WORKBENCH_CONTROLLER_OPENSHIFT_ENABLED=false
+  oc set env dc/$ARG_DEMO-kieserver KIE_SERVER_STARTUP_STRATEGY=ControllerBasedStartupStrategy KIE_SERVER_CONTROLLER_USER=$KIE_SERVER_CONTROLLER_USER KIE_SERVER_CONTROLLER_PWD=$KIE_SERVER_CONTROLLER_PWD KIE_SERVER_CONTROLLER_SERVICE=$ARG_DEMO-rhpamcentr KIE_SERVER_CONTROLLER_PROTOCOL=ws
+
   # Patch the KIE-Server to use our patched image with CORS support.
-  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm73-kieserver-cors:latest'}]"
+  oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm$DM7_VERSION-kieserver-cors:latest'}]"
 
   Write-Output-Header "Creating Quick Loan Bank client application"
   Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
