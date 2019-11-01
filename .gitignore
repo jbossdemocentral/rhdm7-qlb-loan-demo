@@ -3,3 +3,4 @@
 /docker-compose.yml
 /.dockerignore
 target/
+.DS_STORE
