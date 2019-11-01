@@ -361,7 +361,7 @@ function create_application() {
   oc new-app $IMAGE_STREAM_NAMESPACE/nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development
 
   # Retrieve KIE-Server route.
-  KIESERVER_ROUTE=$(oc get route rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
+  KIESERVER_ROUTE=$(oc get route insecure-rhdm7-qlb-loan-kieserver | awk 'FNR > 1 {print $2}')
   # Set the KIESERVER_ROUTE into our application config file:
   sed s/.*kieserver_host.*/\ \ \ \ \'kieserver_host\'\ :\ \'$KIESERVER_ROUTE\',/g $SCRIPT_DIR/config/config.js.orig > $SCRIPT_DIR/config/config.js.temp.1
   sed s/.*kieserver_port.*/\ \ \ \ \'kieserver_port\'\ :\ \'80\',/g $SCRIPT_DIR/config/config.js.temp.1 > $SCRIPT_DIR/config/config.js.temp.2

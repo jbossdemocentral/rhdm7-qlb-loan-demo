@@ -306,7 +306,7 @@ Function Create-Application() {
   Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
-  $KIESERVER_ROUTE=oc get route rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
+  $KIESERVER_ROUTE=oc get route insecure-rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
 
   # Set the KIESERVER_ROUTE into our application config file:
   cat $SCRIPT_DIR/config/config.js.orig | %{$_ -replace ".*kieserver_host.*", "    'kieserver_host' : '$KIESERVER_ROUTE',"} > $SCRIPT_DIR\config\config.js.temp.1
