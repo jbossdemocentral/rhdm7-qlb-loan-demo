@@ -1,0 +1,16 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+	logallrefupdates = false
+	precomposeunicode = true
+[http]
+	sslVerify = true
+[remote "origin"]
+	url = https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	fetch = +refs/tags/*:refs/tags/*
+	fetch = +refs/notes/*:refs/notes/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
