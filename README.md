@@ -13,8 +13,8 @@ consume decision services deployed on the decision server.
 You can install this project on your own machine or on an OpenShift Container Platform.
 
 
-Installing on your machine
---------------------------
+Installing on local machine
+---------------------------
 1. [Download and unzip.](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip).
 
 2. Add products to installs directory, see installs/README for details and links.
