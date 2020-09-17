@@ -97,13 +97,16 @@ Running the demo
    ```
    - observe the result. The Quick Loan Bank rules have fired and determined that, based on the credit score of the application, and the amount of the loan, the loan can be approved. The `approved` attribute of the `Loan` has been set to `true`.
 
-8. TODO: broken.... Navigate to the *support/application-ui/* directory. The installation should have built the UI, but if not, manually 
+
+Running demo with frontend application
+--------------------------------------
+1. Navigate to the *support/application-ui/* directory. The installation should have built the UI, but if not, manually 
 run the command `npm install` to install the required modules. Start the client application by running `npm start`. This 
 will start the NodeJS HTTP server and open the Quick Loan Bank client application in your browser (http://localhost:3000). 
 Try to submit a new loan request using the same data as shown the JSON file at above. Try to enter different values to 
-see a loan get disapproved.
+see a loan get disapproved, for example, change above applicant age from 40 to 80 for rejectoin based on age.
 
-9. You can change the various rules as desired, change the version of the project, and redeploy a new version to a new 
+2. You can change the various rules as desired, change the version of the project, and redeploy a new version to a new 
 KIE Container (allowing you to serve multiple versions of the same rule set at the same time on the same decision server). 
 You can also build a new version of the project and use the Version Configuration tab of the container definition (in the 
 Execution Servers screen) to manage the container using the UPGRADE button to pull the new version.
@@ -214,6 +217,8 @@ See the tagged releases for the following versions of the product:
 ![Red Hat Decision Manager 7](./docs/demo-images/rhdm7.png)
 
 ![QLB UI](./docs/demo-images/qlb_ui.png)
+
+![QLB UI Reject](./docs/demo-images/qlb_ui.png)
 
 ![QLB Application](./docs/demo-images/qlb_rhdm.png)
 
