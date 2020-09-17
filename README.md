@@ -14,7 +14,7 @@ You can install this project on your own machine or on an OpenShift Container Pl
 
 
 Installing on your machine
-----------===-------------
+--------------------------
 1. [Download and unzip.](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip).
 
 2. Add products to installs directory, see installs/README for details and links.
