@@ -522,6 +522,10 @@
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
+										<filter-ref name="Access-Control-Allow-Origin"/>
+                    <filter-ref name="Access-Control-Allow-Methods"/>
+                    <filter-ref name="Access-Control-Allow-Headers"/>
+                    <filter-ref name="Access-Control-Allow-Credentials"/>
                     <http-invoker security-realm="ApplicationRealm"/>
                 </host>
             </server>
@@ -535,6 +539,10 @@
             <filters>
                 <response-header name="server-header" header-name="Server" header-value="JBoss-EAP/7"/>
                 <response-header name="x-powered-by-header" header-name="X-Powered-By" header-value="Undertow/1"/>
+								<response-header name="Access-Control-Allow-Origin" header-name="Access-Control-Allow-Origin" header-value="http://localhost:3000"/>
+                <response-header name="Access-Control-Allow-Methods" header-name="Access-Control-Allow-Methods" header-value="GET, POST, OPTIONS"/>
+                <response-header name="Access-Control-Allow-Headers" header-name="Access-Control-Allow-Headers" header-value="Authorization , Content-Type"/>
+                <response-header name="Access-Control-Allow-Credentials" header-name="Access-Control-Allow-Credentials" header-value="true"/>
             </filters>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:webservices:2.0">
