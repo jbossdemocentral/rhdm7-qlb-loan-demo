@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "angular-patternfly": "^5.0.3",
+    "bootstrap-select": "^1.13.18",
     "patternfly": "^3.59.5"
   }
 }
