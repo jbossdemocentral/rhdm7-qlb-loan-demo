@@ -4,5 +4,3 @@
 /.dockerignore
 target/
 .DS_STORE
-package-lock.json
-package.json
