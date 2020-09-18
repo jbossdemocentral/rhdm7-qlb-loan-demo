@@ -117,16 +117,16 @@ Execution Servers screen) to manage the container using the UPGRADE button to pu
 
 
 Installng on OpenShift Container Platform
------------------------------------------
+=========================================
 This demo can be installed on Red Hat OpenShift Container Platform in various ways, such as on CodeReady Containers (a local
 installaiton of OpenShift Container Platform) or on your own version of OpenShift Container Platform. 
 
 Installing on CodeReady Containers
-==================================
+----------------------------------
 TODO: see this demo on RedHatDemoCentral...
 
-Intalling on your own OpenShift Container Platform
-==================================================
+Intalling on any OpenShift Container Platform (generic)
+-------------------------------------------------------
 Options and a guide for installing this demo on your own OpenShift Container Platform are found in the 
 [openshift support directory README](support/openshift/README.md).
  
