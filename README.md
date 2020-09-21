@@ -116,18 +116,16 @@ You can also build a new version of the project and use the Version Configuratio
 Execution Servers screen) to manage the container using the UPGRADE button to pull the new version.
 
 
-Installng on OpenShift Container Platform
-----------------------------------
-This demo can be installed on Red Hat OpenShift Container Platform in various ways, such as on CodeReady Containers (a local
-installaiton of OpenShift Container Platform) or on your own version of OpenShift Container Platform. 
+Installng on OpenShift Container Platform (CodeReady Containers)
+---------------------------------------------------------------
+Install this demo on your local machine using an OpenShift Container Platform development cluster can be done using 
+CodeReady Continers. It's fully automated and delivers a fully functioning container-native development experience:
 
-Installing on CodeReady Containers
-----------------------------------
-TODO: see this demo on RedHatDemoCentral...
+  [CodeReady Containers Quick Loan Bank Demo](https://gitlab.com/redhatdemocentral/crc-quick-loan-bank-demo)
 
 Intalling on any OpenShift Container Platform (generic)
 -------------------------------------------------------
-Options and a guide for installing this demo on your own OpenShift Container Platform are found in the 
+This demo can be installed on your own version of OpenShift Container Platform. Options and guidance can be found in the 
 [openshift support directory README](support/openshift/README.md).
  
 
