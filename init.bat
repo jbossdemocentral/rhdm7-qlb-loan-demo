@@ -24,7 +24,7 @@ set PROJECT_GIT_REPO="https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-re
 set PROJECT_GIT_REPO_NAME=rhdm7-qlb-loan-demo-repo.git
 set NIOGIT_PROJECT_GIT_REPO="MySpace\%PROJECT_GIT_REPO_NAME%"
 set PROJECT_GIT_BRANCH=master
-set PROJECT_GIT_DIR=%SUPPORT_DIR%\demo_project_git 
+set PROJECT_GIT_DIR=%SUPPORT_DIR%\demo_project_git
 
 REM wipe screen.
 cls
@@ -180,7 +180,10 @@ xcopy /Y /Q "%SUPPORT_DIR%\userinfo.properties" "%SERVER_DIR%\decision-central.w
 
 echo - setting up demo projects, copy default internal repositories...
 echo.
-call DEL /S /F /Q	 %SERVER_BIN%\.niogit && call md %SERVER_BIN%\.niogit && xcopy /Y /Q %SUPPORT_DIR%\rhdm7-demo-niogit\* %SERVER_BIN%\.niogit
+if exist "%SERVER_BIN%\.niogit" (
+    rmdir /s /q "%SERVER_BIN%\.niogit"
+)
+call md %SERVER_BIN%\.niogit && xcopy /Y /Q %SUPPORT_DIR%\rhdm7-demo-niogit\* %SERVER_BIN%\.niogit
 
 if not "%ERRORLEVEL%" == "0" (
 	echo Error occurred during copy of default repo!
@@ -188,10 +191,15 @@ if not "%ERRORLEVEL%" == "0" (
 	GOTO :EOF
 )
 
-# Copy the demo project repo.
+REM Copy the demo project repo.
 echo - cloning the project's Git repo from %PROJECT_GIT_REPO%...
 echo.
-cal DEL /S /F /Q target\temp && call md target\temp && call git clone -b %PROJECT_GIT_BRANCH% --single-branch %PROJECT_GIT_REPO% target\temp\%PROJECT_GIT_REPO_NAME%
+
+if exist "%PROJECT_HOME%\target\temp" (
+    rmdir /s /q %PROJECT_HOME%\target\temp
+)
+
+call md %PROJECT_HOME%\target\temp && call git clone -b %PROJECT_GIT_BRANCH% --single-branch %PROJECT_GIT_REPO% %PROJECT_HOME%\target\temp\%PROJECT_GIT_REPO_NAME%
 
 if not "%ERRORLEVEL%" == "0" (
 	echo Error cloning project git repo, check connection!
@@ -199,7 +207,7 @@ if not "%ERRORLEVEL%" == "0" (
 	GOTO :EOF
 )
 
-call pushd target\temp\%PROJECT_GIT_REPO_NAME%
+call pushd %PROJECT_HOME%\target\temp\%PROJECT_GIT_REPO_NAME%
 
 echo - renaming cloned branch '%PROJECT_GIT_BRANCH%' to 'master'...
 echo.
@@ -213,9 +221,15 @@ if not "%ERRORLEVEL%" == "0" (
 
 call popd
 
-echo - replacing cached project git repo %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME%...
+echo - replacing cached project git repo '%PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME%'...
 echo.
-call DEL /S /F /Q %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME% && call md mkdir %PROJECT_GIT_DIR% && call git clone --bare target\temp\%PROJECT_GIT_REPO_NAME% %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME% && call DEL /S /F /Q target\temp
+
+if exist "%PROJECT_GIT_DIR%" (
+    rmdir /s /q "%PROJECT_GIT_DIR%"
+)
+
+
+call mkdir %PROJECT_GIT_DIR% && call git clone --bare %PROJECT_HOME%\target\temp\%PROJECT_GIT_REPO_NAME% %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME% && call rmdir /s /q  %PROJECT_HOME%\target\temp
 
 if not "%ERRORLEVEL%" == "0" (
 	echo Error replacing cached project git repo!
@@ -225,7 +239,12 @@ if not "%ERRORLEVEL%" == "0" (
 
 echo - copy repo to EAP installation directory...
 echo.
-call DEL /S /F /Q %SERVER_BIN%\.niogit\%NIOGIT_PROJECT_GIT_REPO% && xcopy /Y /Q %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME% %SERVER_BIN%\.niogit\%NIOGIT_PROJECT_GIT_REPO%
+
+if exist "%SERVER_BIN%\.niogit\%NIOGIT_PROJECT_GIT_REPO%" (
+    rmdir /s /q "%SERVER_BIN%\.niogit\%NIOGIT_PROJECT_GIT_REPO%"
+)
+
+xcopy /Y /Q %PROJECT_GIT_DIR%\%PROJECT_GIT_REPO_NAME%\ %SERVER_BIN%\.niogit\%NIOGIT_PROJECT_GIT_REPO%\
 
 if not "%ERRORLEVEL%" == "0" (
 	echo Error copying to installation directory in EAP!
@@ -235,7 +254,7 @@ if not "%ERRORLEVEL%" == "0" (
 
 echo - installing the UI...
 echo.
-call pushd support\application-ui/
+call pushd %SUPPORT_DIR%\application-ui
 call npm install
 
 if not "%ERRORLEVEL%" == "0" (
@@ -251,7 +270,7 @@ echo =  %PRODUCT% %VERSION% setup complete.                         =
 echo =                                                                         =
 echo =  You can now start the %PRODUCT% with:                   =
 echo =                                                                         =
-echo =                         %SERVER_BIN%\standalone.sh        =
+echo =                         %SERVER_BIN%\standalone.bat        =
 echo =                                                                         =
 echo =  Login to Red Hat Decision Manager to start developing rules projects:  =
 echo =                                                                         =
