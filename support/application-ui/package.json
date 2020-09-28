@@ -10,15 +10,39 @@
   "author": "Rachid Snoussi",
   "license": "ISC",
   "devDependencies": {
-    "browser-sync": "^2.24.4",
-    "gulp": "^4.0.0",
-    "gulp-clean-css": "^3.9.4",
-    "gulp-less": "^4.0.0",
-    "gulp-plumber": "^1.1.0",
-    "gulp-uglify": "^1.5.4"
+    "browser-sync": "^2.26.12",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-less": "^4.0.1",
+    "gulp-plumber": "^1.2.1",
+    "gulp-uglify": "^3.0.2"
   },
   "dependencies": {
-    "angular-patternfly": "^5.0.1",
-    "patternfly": "^3.23.2"
+    "@popperjs/core": "^2.4.4",
+    "angular": "^1.8.0",
+    "angular-patternfly": "^5.0.3",
+    "axios": "^0.20.0",
+    "bootstrap": "^4.5.2",
+    "bootstrap-select": "^1.13.18",
+    "bootstrap-switch": "^3.4.0",
+    "chokidar": "^3.4.2",
+    "deap": "^1.0.1",
+    "eonasdan-bootstrap-datetimepicker": "^4.17.47",
+    "http-proxy": "^1.18.1",
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.20",
+    "lodash.merge": "^4.6.2",
+    "lodash.template": "^4.5.0",
+    "minimist": "^1.2.5",
+    "mixin-deep": "^2.0.1",
+    "node-sass": "^4.14.1",
+    "patternfly": "^3.59.5",
+    "peer": "^0.5.3",
+    "popper.js": "^1.16.1",
+    "set-value": "^3.0.2",
+    "yargs-parser": "^20.0.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.1.3"
   }
 }
