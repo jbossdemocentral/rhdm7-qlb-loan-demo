@@ -28,7 +28,7 @@ angular.module('demo', [])
         console.log("KIE-Server containerId: " + ENV.kieserver_containerId);
         console.log("User: " + ENV.kieserver_user);
         console.log("Password: " + ENV.kieserver_password );
-        $http.post('http://' + ENV.kieserver_host + ':' + ENV.kieserver_port + ENV.kieserver_contextroot +  '/services/rest/server/containers/instances/' + ENV.kieserver_containerId, '{ \"lookup\": \"default-stateless-ksession\", \"commands\": [ { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Applicant\": { \"creditScore\":'+$scope.applicant.creditScore+', \"name\":\"'+$scope.applicant.name+'\", \"age\":'+$scope.applicant.age+', \"yearlyIncome\":'+$scope.applicant.yearlyIncome+' } }, \"out-identifier\":\"applicant\" } }, { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_application.model.Loan\": { \"amount\":'+$scope.loan.amount+', \"duration\":'+$scope.loan.duration+' } }, \"out-identifier\":\"loan\" } }, { \"start-process\" : { \"processId\" : \"loan-application.loan-application-decision-flow\", \"parameter\" : [ ], \"out-identifier\" : null } } ]}' ,{
+        $http.post('http://' + ENV.kieserver_host + ':' + ENV.kieserver_port + ENV.kieserver_contextroot +  '/services/rest/server/containers/instances/' + ENV.kieserver_containerId, '{ \"lookup\": \"default-stateless-ksession\", \"commands\": [ { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_pre_approval.model.Applicant\": { \"creditScore\":'+$scope.applicant.creditScore+', \"name\":\"'+$scope.applicant.name+'\", \"age\":'+$scope.applicant.age+', \"yearlyIncome\":'+$scope.applicant.yearlyIncome+' } }, \"out-identifier\":\"applicant\" } }, { \"insert\": { \"object\": { \"com.redhat.demo.qlb.loan_pre_approval.model.Loan\": { \"amount\":'+$scope.loan.amount+', \"duration\":'+$scope.loan.duration+' } }, \"out-identifier\":\"loan\" } }, { \"start-process\" : { \"processId\" : \"loan-pre-approval.decision-flow\", \"parameter\" : [ ], \"out-identifier\" : null } } ]}' ,{
         headers: {'Authorization': 'Basic ' + btoa(ENV.kieserver_user + ':' + ENV.kieserver_password) }
         }).
             then(function(response) {
@@ -36,7 +36,7 @@ angular.module('demo', [])
                 $scope.greeting = response.data;
                 // $scope.info = $scope.greeting.result["kie-server-info"];
                // console.log($scope.greeting);
-                var approved =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_application.model.Loan"].approved;
+                var approved =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_pre_approval.model.Loan"].approved;
                 if (approved) {
                     // approved
                     console.log("approved");
@@ -45,11 +45,11 @@ angular.module('demo', [])
                     $scope.applicationResult = "Approved";
                     $scope.applicationResultIcon = "pficon pficon-ok";
                     // add comment to message
-                    var comment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_application.model.Loan"].comment;
+                    var comment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_pre_approval.model.Loan"].comment;
                     // add interestRate to message
-                    var interestRate =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_application.model.Loan"].interestRate;
+                    var interestRate =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_pre_approval.model.Loan"].interestRate;
                     // add monthlyRepayment to message
-                    var monthlyRepayment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_application.model.Loan"].monthlyRepayment;
+                    var monthlyRepayment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_pre_approval.model.Loan"].monthlyRepayment;
                     $scope.applicationResultMessages = [comment,"Interest Rate : "+interestRate, "Monthly Repayment : "+monthlyRepayment];
                     console.log($scope.applicationResultMessages);
                 } else {
@@ -60,7 +60,7 @@ angular.module('demo', [])
                     $scope.applicationResult = "Rejected";
                     $scope.applicationResultIcon = "pficon pficon-error-circle-o";
                     // add comment to message
-                    var comment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_application.model.Loan"].comment;
+                    var comment =  $scope.greeting.result["execution-results"].results[0].value["com.redhat.demo.qlb.loan_pre_approval.model.Loan"].comment;
                     $scope.applicationResultMessages = [comment];
                     console.log($scope.applicationResultMessages);
                 }
