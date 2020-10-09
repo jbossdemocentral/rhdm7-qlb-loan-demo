@@ -1,31 +1,17 @@
 Red Hat Decision Manager Quick Loan Bank Demo
 =============================================
-This demo project showcases the tooling available in Red Hat Decision Manager implementing 
-complex decision logic which can be exposed as a decision service. The Quick Loan Bank in this 
-demo uses technical rules, decision tables, guided rules with a Domain Specific Language, and 
-Excel decision tables to define its loan calculation and approval system.
 
-You will be given examples of calling the rules as if using them from an application through 
-the RestAPI that is exposed by the server. Furthermore, this demo provides a Node.js client 
-application written in AngularJS and PatternFly that showcases how web applications can 
-consume decision services deployed on the decision server.
-
-You can install this project on an OpenShift Container Platform.
-
-
-Installng on OpenShift Container Platform
+Installing on OpenShift Container Platform
 -----------------------------------------
 This demo can be installed on Red Hat OpenShift Container Platform in various ways. We'll explain the different options provided.
 
 All installation options require an `oc` client installation that is connected to a running OpenShift instance. More information 
-on OpenShift and how to setup a local OpenShift development environment based on the Red Hat Container Development Kit can be 
-found [here](https://developers.redhat.com/products/cdk/overview/).
+on OpenShift and how to setup a local OpenShift development environment based on the Red Hat Container Development Kit can be found [here](https://developers.redhat.com/products/cdk/overview/).
 
 ---
 **NOTE**
 
-The Red Hat Decision Manager 7 - Decision Central image requires a 
-[Persistent Volume](https://docs.openshift.com/container-platform/3.7/architecture/additional_concepts/storage.html) which has 
+The Red Hat Decision Manager 7 - Decision Central image requires a [Persistent Volume](https://docs.openshift.com/container-platform/3.7/architecture/additional_concepts/storage.html) which has 
 both `ReadWriteOnce` (RWO) *and* `ReadWriteMany` (RWX) Access Types. If no PVs matching this description are available, 
 deployment of that image will fail until a PV of that type is available.
 
@@ -35,9 +21,8 @@ deployment of that image will fail until a PV of that type is available.
 This installation option will install the Decision Manager 7 and Decision Service in OpenShift using a single script, after 
 which the demo project needs to be manually imported.
 
-1. [Download and unzip.](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip) or 
-   [clone this repo](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo.git).
-
+1. [Download and unzip](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip) or [clone this repo](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo.git).
+   
 2. Run the "init-openshift.sh" (for Linux and macOS) or "init-openshift.ps1" (Windows) file. This will create a new project 
    and application in OpenShift.
 
