@@ -25,8 +25,8 @@ We'll see how the loan calculations and approvals can be automated through these
 1. [Download and unzip](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip) or [clone this repo](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo.git).
 2. Download and add products below to installs directory ( refer to [installs/README](installs/README) for more details ).
     * [Red Hat Enterprise Application Platform zip file (jboss-eap-7.3.0.zip)](https://developers.redhat.com/download-manager/file/jboss-eap-7.3.0.zip)
-    * [Decision Central deployable (rhdm-7.8.0-decision-central-eap7-deployable.zip](https://developers.redhat.com/products/red-hat-decision-manager/download)
-    * [Decision Server (KIE Server) deployable (rhdm-7.8.0-kie-server-ee8.zip)](https://developers.redhat.com/products/red-hat-decision-manager/download)
+    * [Decision Central deployable (rhdm-7.9.0-decision-central-eap7-deployable.zip](https://developers.redhat.com/products/red-hat-decision-manager/download)
+    * [Decision Server (KIE Server) deployable (rhdm-7.9.0-kie-server-ee8.zip)](https://developers.redhat.com/products/red-hat-decision-manager/download)
 3. Run 'init.sh' or 'init.bat' file. 'init.bat' must be run with Administrative privileges
 
 Follow the install output instructions and log in to Decision Central. 
@@ -207,6 +207,8 @@ Supporting articles and videos
 Released versions
 -----------------
 See the tagged releases for the following versions of the product:
+
+- v1.5 - Red Hat Decision Manager 7.9.0.GA
 
 - v1.4 - Red Hat Decision Manager 7.8.0.GA
 
