@@ -1,3 +1,9 @@
 # pack-refs with: peeled
-be3872612a3e9ab00a38deeb9a53b97dc301a604 refs/heads/master
-be3872612a3e9ab00a38deeb9a53b97dc301a604 refs/remotes/origin/master
+13fb587b0a4770de85f4651fcb26931908043a1f refs/heads/dm79
+5e38073cd8ee0a0997844e53e144a06f4ad1f26f refs/heads/master
+5e38073cd8ee0a0997844e53e144a06f4ad1f26f refs/heads/removing-deps
+aa244127c2d6d20045e54ab89cf1bf11297c1262 refs/heads/rhdm78-update
+13fb587b0a4770de85f4651fcb26931908043a1f refs/remotes/origin/dm79
+5e38073cd8ee0a0997844e53e144a06f4ad1f26f refs/remotes/origin/master
+5e38073cd8ee0a0997844e53e144a06f4ad1f26f refs/remotes/origin/removing-deps
+aa244127c2d6d20045e54ab89cf1bf11297c1262 refs/remotes/origin/rhdm78-update
