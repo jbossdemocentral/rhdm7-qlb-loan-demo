@@ -41,7 +41,7 @@ Enjoy installed and configured Red Hat Decision Manager Quick Loan Bank Demo (se
 
 1. Click on the "loan-pre-approval" project to open the Loan Application Demo project.
 
-    (./docs/demo-images/bc-loan-pre-approval-project.png)
+    ![](./docs/demo-images/bc-loan-pre-approval-project.png)
 
 2. About the project:
 
@@ -180,8 +180,8 @@ Demonstrate how simple it is to update and deploy a business rules.
     
 2. Open Business Central in another tab, open the project "loan-pre-approval", and open the rule `eligibility-too-old-applicant`.  Change the maximum age to 60. **Save** and close the file.
 3. Deploy the project again by clicking the `Deploy` button.
-4. Open the QLB UI frontend application, and simply submit the form again without changing the data or reloading the page. You should see the new rules are already in use.images
-    1. ![](./docs/demo-images/qlb-ui-reject.png)
+4. Open the QLB UI frontend application, and simply submit the form again without changing the data or reloading the page. You should see the new rules are already in use.
+    ![](./docs/demo-images/qlb_ui_reject.png)
 
 
 
