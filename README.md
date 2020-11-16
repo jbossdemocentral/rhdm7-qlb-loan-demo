@@ -220,25 +220,12 @@ See the tagged releases for the following versions of the product:
 
 - v1.0 - Red Hat Decision Manager 7.0.0.GA
 
-![Red Hat Decision Manager 7](./docs/demo-images/rhdm7.png)
+Extra images
+-----------------
 
 ![QLB UI](./docs/demo-images/qlb_ui.png)
 
-![QLB UI Reject](./docs/demo-images/qlb_ui.png)
-
 ![QLB Application](./docs/demo-images/qlb_rhdm.png)
-
-![Loan Project](./docs/demo-images/loan-prj-overview.png)
-
-![Rule Flow](./docs/demo-images/loan-application-decision-flow.png)
-
-![Decision Table](./docs/demo-images/decision-table.png)
-
-![Execution Server View](./docs/demo-images/execution-server-view.png)
-
-![Swagger UI](./docs/demo-images/kie-server-swagger-ui.png)
-
-![Swagger UI Containers Overview](./docs/demo-images/kie-server-swagger-ui-containers-overview.png)
 
 ![Swagger UI Rules Request](./docs/demo-images/kie-server-swagger-ui-rules-request.png)
 
