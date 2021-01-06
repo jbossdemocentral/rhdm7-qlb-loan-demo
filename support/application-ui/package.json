@@ -21,7 +21,7 @@
     "@popperjs/core": "^2.4.4",
     "angular": "^1.8.0",
     "angular-patternfly": "^5.0.3",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.2",
     "bootstrap-select": "^1.13.18",
     "bootstrap-switch": "^3.4.0",
