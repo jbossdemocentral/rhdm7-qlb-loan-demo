@@ -5,6 +5,6 @@ var ENV = {
     'kieserver_port' : '8080',
     'kieserver_contextroot' : '',
     'kieserver_containerId' : 'loan-application',
-    'kieserver_user' : 'kieserver',
-    'kieserver_password' : 'kieserver1!'
+    'kieserver_user' : 'dmAdmin',
+    'kieserver_password' : 'redhatdm1!'
 };
