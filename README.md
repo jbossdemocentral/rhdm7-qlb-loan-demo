@@ -59,11 +59,9 @@ Enjoy installed and configured Red Hat Decision Manager Quick Loan Bank Demo (se
 
       ![](./docs/demo-images/bc-decision-flow-ruleflow-group.png)
 
-    * Based on this parameter the engine knows which sets of rules to trigger, even if these rules are written in different files (notice how the set of rules identified by the `ruleflow-group`  "eligibility-rules" are defined in the Guided Rules (with DSL) files `eligibility-too-old-applicant` and `eligibility-too-young-applicant` .
+    * Based on this parameter the engine knows which sets of rules to trigger, even if these rules are written in different files (notice how the set of rules identified by the `ruleflow-group`  "eligibility-rules" are defined in the Guided Rules (with DSL) files, for example `eligibility-too-young-applicant` .
 
-      ![](./docs/demo-images/bc-guided-rules-dsl.png)
-
-    * The rules authored in the files `eligibility-too-old-applicant` and `eligibility-too-young-applicant`, are written using Domain Specific Language. You can check the definition of this DSL in the file `dsl-definition`.
+    * The rules authored in these rules, are written using Domain Specific Language. You can check the definition of this DSL in the file `dsl-definition`.
 
       ![](./docs/demo-images/bc-dsl-definition.png)
 
