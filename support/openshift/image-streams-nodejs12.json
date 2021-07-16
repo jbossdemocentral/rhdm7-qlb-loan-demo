@@ -15,20 +15,20 @@
         "tags": [
           {
             "annotations": {
-              "description": "Build and run Node.js 6 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-nodejs-container.",
+              "description": "Build and run Node.js 12 applications on RHEL 7. For more information about using this builder image, including OpenShift considerations, see https://github.com/sclorg/s2i-nodejs-container.",
               "iconClass": "icon-nodejs",
-              "openshift.io/display-name": "Node.js 6",
+              "openshift.io/display-name": "Node.js 12",
               "openshift.io/provider-display-name": "Red Hat, Inc.",
               "sampleRepo": "https://github.com/sclorg/nodejs-ex.git",
-              "supports": "nodejs:6,nodejs",
+              "supports": "nodejs:12,nodejs",
               "tags": "builder,nodejs",
-              "version": "6"
+              "version": "12"
             },
             "from": {
               "kind": "DockerImage",
-              "name": "registry.redhat.io/rhscl/nodejs-6-rhel7:latest"
+              "name": "registry.redhat.io/rhscl/nodejs-12-rhel7:latest"
             },
-            "name": "6",
+            "name": "12",
             "referencePolicy": {
               "type": "Local"
             }

@@ -31,8 +31,7 @@ which the demo project needs to be manually imported.
 4. Open the project "RHDM7 Quick Loan Bank Demo". Open the "Overview". Wait until the 2 pods, "rhdm7-loan-rhdmcentr" and 
    "rhdm7-loan-kieserver" have been deployed.
 
-5. Open the "Applications -> Routes" screen. Click on the "Hostname" value next to "rhdm7-loan-rhdmcentr". This opens the 
-   Decision Central console.
+5. Open the "Networking -> Routes" screen. Click on the "Location" value next to "rhdm7-qlb-loan-rhdmcentr". This opens the Decision Central console.
 
 6. Login to Decision Central:
 
@@ -41,38 +40,26 @@ which the demo project needs to be manually imported.
     ```
 7. Click on "Design" to open the design perspective.
 
-8. Click on "Import project". Enter the following as the repository URL: https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo.git, 
-   and click on "Import".
+8. Click on "Import project". Enter the following as the repository URL: https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo-repo.git, and click on "Import".
 
 9. Select "loan-application" and click on the "Ok" button on the right-hand side of the screen.
 
-10. The project has simple data model (Loan & Applicant) and single decision table (loan-application) which contains the loan 
-    approval rule set.
+10. The project has simple data model (Loan & Applicant) and single decision table (loan-application) which contains the loan approval rule set.
 
 11. Build and deploy version 1.0 of the project. Click on the "Build and Deploy" in the upper right corner.
 
-12. Go to "Menu -> Deploy -> Execution Servers" repository to see the loan-application_1.0 KIE Container deployed on the 
-    Decision Server.
+12. Go to "Menu -> Deploy -> Execution Servers" repository to see the loan-application KIE Container deployed on the Decision Server.
 
-13. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at. To open the 
-    Swagger UI, go back to the OpenShift console, and go to the "Applications - Routes" screen. Copy the "Hostname" value next 
-    to "rhdm7-loan-kieserver". Paste the URL in a browser tab and add "/docs" to the URL. This will show the Swagger UI.
+13. The Decision Server provides a Swagger UI that documents the full RESTful interface exposed by the server at. To open the Swagger UI, go back to the OpenShift console, and go to the "Networking - Routes" screen. Copy the "Location" value next  to "rhdm7-qlb-loan-kieserver". Paste the URL in a browser tab and add "/docs" to the URL. This will show the Swagger UI.
 
 14. Follow instructions 11 and 12 from above "Option 1- Install on your machine".
 
-15. The AngularJS client application can also be accessed via an OpenShift route. Go back to the OpenShift console, and go to 
-    the "Applications - Routes" screen. Click on the hostname of the "qlb-client-application", this will direct you to the client 
-    application. Try to submit a new loan request using the same data as shown the JSON file at step 12 of "Option 1 - Install on 
-    your machine". Try to enter different values to see a loan get disapproved.
+15. The AngularJS client application can also be accessed via an OpenShift route. Go back to the OpenShift console, and go to the "Applications - Routes" screen. Click on the hostname of the "qlb-client-application", this will direct you to the client application. Try to submit a new loan request using the same data as shown the JSON file at step 12 of "Option 1 - Install on your machine". Try to enter different values to see a loan get disapproved.
 
-16. You can change the various rules as desired, change the version of the project, and redeploy a new version to a new KIE Container 
-    (allowing you to serve multiple versions of the same rule set at the same time on the same Decision Server). You can also build a 
-    new version of the project and use the Version Configuration tab of the container definition (in the Execution Servers screen) to 
-    manage the container using the UPGRADE button to pull the new version.
+16. You can change the various rules as desired, change the version of the project, and redeploy a new version to a new KIE Container (allowing you to serve multiple versions of the same rule set at the same time on the same Decision Server). You can also build a new version of the project and use the Version Configuration tab of the container definition (in the Execution Servers screen) to  manage the container using the UPGRADE button to pull the new version.
 
 ### Scripted installation
-This installation option will install the Decision Manager 7 and Decision Service in OpenShift using a the provided `provision.sh` 
-script, which gives the user a bit more control how to provision to OpenShift.
+This installation option will install the Decision Manager 7 and Decision Service in OpenShift using a the provided `provision.sh` script, which gives the user a bit more control how to provision to OpenShift.
 
 1. [Download and unzip.](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip) or 
 [clone this repo](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo.git).

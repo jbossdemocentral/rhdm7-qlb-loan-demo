@@ -106,9 +106,9 @@ $KIE_SERVER_USER="kieserver"
 $KIE_SERVER_PWD="kieserver1!"
 
 # Version Configuration Parameters
-$OPENSHIFT_DM7_TEMPLATES_TAG="7.7.0.GA"
-$IMAGE_STREAM_TAG="7.7.0"
-$DM7_VERSION="77"
+$OPENSHIFT_DM7_TEMPLATES_TAG="7.11.0.GA"
+$IMAGE_STREAM_TAG="7.11.0"
+$DM7_VERSION="711"
 
 ################################################################################
 # DEMO MATRIX                                                                  #
@@ -216,7 +216,7 @@ Function Import-ImageStreams-And-Templates() {
   Call-Oc "create -f https://raw.githubusercontent.com/jboss-container-images/rhdm-7-openshift-image/$OPENSHIFT_DM7_TEMPLATES_TAG/rhdm$DM7_VERSION-image-streams.yaml" $True "Error importing Image Streams" $True
   # Import RHEL Image Streams to import NodeJS, so we can patch the registry location.
   #Call-Oc "create -f https://raw.githubusercontent.com/openshift/origin/master/examples/image-streams/image-streams-rhel7.json" $True "Error importing Image Streams" $True
-  Call-OC "create -f $SCRIPT_DIR/image-streams-nodejs6.json" $True "Error importing Image Streams" $True
+  Call-OC "create -f $SCRIPT_DIR/image-streams-nodejs12.json" $True "Error importing Image Streams" $True
 
   Write-Output ""
   Write-Output "Fetching ImageStreams from registry."
@@ -226,7 +226,7 @@ Function Import-ImageStreams-And-Templates() {
   #  Explicitly import the images. This is to overcome a problem where the image import gets a 500 error from registry.redhat.io when we deploy multiple containers at once.
   Call-Oc "import-image rhdm-decisioncentral-rhel8:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
   Call-Oc "import-image rhdm-kieserver-rhel8:$IMAGE_STREAM_TAG —confirm -n $($PRJ[0])" $True "Error fetching Image Streams."
-  Call-OC "import-image nodejs:6 --confirm -n $($PRJ[0])" $True "Error fetching Image Streams"
+  Call-OC "import-image nodejs:12 --confirm -n $($PRJ[0])" $True "Error fetching Image Streams"
 
   #Write-Output-Header "Patching the ImageStreams"
   #oc patch is/rhdm73-decisioncentral-openshift --type='json' -p "[{'op': 'replace', 'path': '/spec/tags/0/from/name', 'value': 'registry.access.redhat.com/rhdm-7/rhdm73-decisioncentral-openshift:1.0'}]"
@@ -305,7 +305,7 @@ Function Create-Application() {
   oc patch dc/rhdm7-qlb-loan-kieserver --type='json' -p="[{'op': 'replace', 'path': '/spec/triggers/0/imageChangeParams/from/name', 'value': 'rhdm$DM7_VERSION-kieserver-cors:latest'}]"
 
   Write-Output-Header "Creating Quick Loan Bank client application"
-  Call-Oc "new-app nodejs:6~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
+  Call-Oc "new-app nodejs:12~https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo#master --name=qlb-client-application --context-dir=support/application-ui -e NODE_ENV=development --build-env NODE_ENV=development" $True "Error creating client application." $True
 
   # Retrieve KIE-Server route.
   $KIESERVER_ROUTE=oc get route insecure-rhdm7-qlb-loan-kieserver | select -index 1 | %{$_ -split "\s+"} | select -index 1
