@@ -178,7 +178,7 @@ Demonstrate how simple it is to update and deploy a business rules.
     * Loan Amount: 250000
     * Duration: 10
     
-2. Open Business Central in another tab, open the project "loan-pre-approval", and open the rule `eligibility-too-young-applicant`.  Change the maximum age to 60. **Save** and close the file.
+2. Open Business Central in another tab, open the project "loan-pre-approval", and open the rule `eligibility-too-young-applicant`.  Change the minimum age to 18. **Save** and close the file.
 3. Deploy the project again by clicking the `Deploy` button.
 4. Open the QLB UI frontend application, and simply submit the form again without changing the data or reloading the page. You should see the new rules are already in use.
     ![](./docs/demo-images/qlb_ui_reject.png)
