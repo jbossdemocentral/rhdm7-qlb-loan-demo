@@ -160,7 +160,7 @@ Enjoy installed and configured Red Hat Decision Manager Quick Loan Bank Demo (se
 2. Start the client application by running `npm start`.  This will start the NodeJS HTTP server and open the Quick Loan Bank client application in your browser (http://localhost:3000). 
 
 1. Try to submit a new loan request using the same data as shown the JSON file at above. Try to enter different values to 
-    see a loan get disapproved, for example, change above applicant age from 40 to 80 for rejection based on age.
+    see a loan get disapproved, for example, change above applicant age from 40 to 15 for rejection based on age.
 
     ![](./docs/demo-images/qlb-ui.png)
 
@@ -172,13 +172,13 @@ Demonstrate how simple it is to update and deploy a business rules.
 1. Ask for a Loan (either using the rest api or the frontend ui) with the following parameters. The Loan should be approved.
    
     * Name: Billy Bob
-    * Age: 65
+    * Age: 17
     * Credit Score: 410
     * Yearly Income: 90000
     * Loan Amount: 250000
     * Duration: 10
     
-2. Open Business Central in another tab, open the project "loan-pre-approval", and open the rule `eligibility-too-old-applicant`.  Change the maximum age to 60. **Save** and close the file.
+2. Open Business Central in another tab, open the project "loan-pre-approval", and open the rule `eligibility-too-young-applicant`.  Change the maximum age to 60. **Save** and close the file.
 3. Deploy the project again by clicking the `Deploy` button.
 4. Open the QLB UI frontend application, and simply submit the form again without changing the data or reloading the page. You should see the new rules are already in use.
     ![](./docs/demo-images/qlb_ui_reject.png)
