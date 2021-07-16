@@ -11,7 +11,7 @@ SRC_DIR=./installs
 SUPPORT_DIR=./support
 PRJ_DIR=./projects
 VERSION_EAP=7.3.0
-VERSION=7.10.0
+VERSION=7.11.0
 EAP=jboss-eap-$VERSION_EAP.zip
 RHDM=rhdm-$VERSION-decision-central-eap7-deployable.zip
 KIESERVER=rhdm-$VERSION-kie-server-ee8.zip
@@ -170,7 +170,41 @@ fi
 
 echo "  - setting up standalone-full.xml configuration adjustments..."
 echo
-cp $SUPPORT_DIR/standalone-full.xml $SERVER_CONF/standalone.xml
+cp $SERVER_CONF/standalone-full.xml $SERVER_CONF/standalone.xml
+
+echo "  - setup system properties"
+echo
+./target/jboss-eap-7.3/bin/jboss-cli.sh <<EOT
+embed-server
+/system-property=org.kie.server.location:add(value=http://localhost:8080/kie-server/services/rest/server)
+/system-property=org.kie.server.controller:add(value=http://localhost:8080/decision-central/rest/controller)
+/system-property=org.kie.server.controller.user:add(value=kieserver)
+/system-property=org.kie.server.controller.pwd:add(value=kieserver1!)
+/system-property=org.kie.server.user:add(value=kieserver)
+/system-property=org.kie.server.pwd:add(value=kieserver1!)
+/system-property=org.kie.server.id:add(value=default-kie-server)
+/system-property=org.kie.override.deploy.enabled:add(value=true)
+/system-property=org.kie.server.repo:add(value=\${jboss.home.dir}/bin})
+/system-property=org.uberfire.metadata.index.dir:add(value=\${jboss.home.dir}/bin)   
+/system-property=org.guvnor.m2repo.dir:add(value=\${jboss.home.dir}/bin)
+/system-property=org.uberfire.nio.git.dir:add(value=\${jboss.home.dir}/bin)
+EOT
+
+echo "  - setup cors filters in undertow"
+echo
+$JBOSS_HOME/bin/jboss-cli.sh <<EOT
+embed-server
+/subsystem=undertow/server=default-server/host=default-host/filter-ref="Access-Control-Allow-Origin":add()
+/subsystem=undertow/server=default-server/host=default-host/filter-ref="Access-Control-Allow-Methods":add()
+/subsystem=undertow/server=default-server/host=default-host/filter-ref="Access-Control-Allow-Headers":add()
+/subsystem=undertow/server=default-server/host=default-host/filter-ref="Access-Control-Allow-Credentials":add()
+/subsystem=undertow/server=default-server/host=default-host/filter-ref="Access-Control-Max-Age":add()
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Origin":add(header-name="Access-Control-Allow-Origin",header-value="*")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Methods":add(header-name="Access-Control-Allow-Methods",header-value="GET, POST, OPTIONS, PUT")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Headers":add(header-name="Access-Control-Allow-Headers",header-value="accept, authorization, content-type, x-requested-with")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Credentials":add(header-name="Access-Control-Allow-Credentials",header-value="true")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Max-Age":add(header-name="Access-Control-Max-Age",header-value="1")
+EOT
 
 echo "  - setup email notification users..."
 echo
@@ -248,21 +282,25 @@ fi
 
 popd
 
-echo "==========================================================================="
-echo "=                                                                         ="
-echo "=  $PRODUCT $VERSION setup complete.                         ="
-echo "=                                                                         ="
-echo "=  You can now start the $PRODUCT with:                   ="
-echo "=                                                                         ="
-echo "=                         $SERVER_BIN/standalone.sh        ="
-echo "=                                                                         ="
-echo "=  Login to Red Hat Decision Manager to start developing rules projects:  ="
-echo "=                                                                         ="
-echo "=  http://localhost:8080/decision-central                                 ="
-echo "=                                                                         ="
-echo "=  [ u:dmAdmin / p:redhatdm1! ]                                           ="
-echo "=                                                                         ="
-echo "=  See README.md for general details to run the various demo cases.       ="
-echo "=                                                                         ="
-echo "==========================================================================="
+echo "=============================================================================="
+echo "=                                                                            ="
+echo "=  $PRODUCT $VERSION setup complete.                           ="
+echo "=                                                                            ="
+echo "=  You can now start the $PRODUCT with:                      ="
+echo "=                                                                            ="
+echo "=      $SERVER_BIN/standalone.sh                              ="
+echo "=                                                                            ="
+echo "=  Login to Red Hat Decision Manager to start developing rules projects:     ="
+echo "=                                                                            ="
+echo "=  http://localhost:8080/decision-central                                    ="
+echo "=                                                                            ="
+echo "=  [ u:dmAdmin / p:redhatdm1! ]                                              ="
+echo "=                                                                            ="
+echo "=  To start the front-end app, navigate to 'support/application-ui' and run: ="
+echo "=                                                                            ="
+echo "=   npm start                                                                ="
+echo "=                                                                            ="
+echo "=  See README.md for general details to run the various demo cases.          ="
+echo "=                                                                            ="
+echo "=============================================================================="
 echo

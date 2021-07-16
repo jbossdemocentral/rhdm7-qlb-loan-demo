@@ -14,7 +14,7 @@ set SRC_DIR=%PROJECT_HOME%installs
 set SUPPORT_DIR=%PROJECT_HOME%\support
 set PRJ_DIR=%PROJECT_HOME%\projects
 set VERSION_EAP=7.3.0
-set VERSION=7.10.0
+set VERSION=7.11.0
 set EAP=jboss-eap-%VERSION_EAP%.zip
 set RHDM=rhdm-%VERSION%-decision-central-eap7-deployable.zip
 set KIESERVER=rhdm-%VERSION%-kie-server-ee8.zip
@@ -167,11 +167,6 @@ echo - User 'dmAdmin' password 'redhatdm1!' setup...
 echo.
 call %JBOSS_HOME%\bin\add-user.bat -a -r ApplicationRealm -u kieserver -p kieserver1! -ro kie-server,rest-all --silent
 echo - Management user 'kieserver' password 'kieserver1!' setup...
-echo.
-
-echo - setting up standalone.xml configuration adjustments...
-echo.
-xcopy /Y /Q "%SUPPORT_DIR%\standalone-full.xml" "%SERVER_CONF%\standalone.xml"
 echo.
 
 echo - setup email task notification users...

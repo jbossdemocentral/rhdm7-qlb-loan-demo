@@ -15,7 +15,7 @@ Red Hat Decision Manager supports the automation of decision in many different w
 We'll see how the loan calculations and approvals can be automated through these assets and how we can do unit testing of these rules through **Test Scenarios**. We'll use **Decision Central** to author and deploy the rules, into the **Decision Engine**, and we'll use a custom front end application to consume the rules deployed in the Decision Engine.
 
 # Technical Details
-* This demo runs in Red Hat Decision Manager 7.10. 
+* This demo runs in Red Hat Decision Manager 7.11. 
 * You can either provision it locally in Red Hat EAP, in CRC or on OpenShift Container Platform 4.6;
 * In this demo, you will be given examples of calling the rules as if using them from an application through the Rest API that is exposed by the Decision Engine. 
 * You'll also have available a Node.js client application written in AngularJS and PatternFly that showcases how web applications can consume decision services deployed on the decision server.
@@ -25,9 +25,9 @@ We'll see how the loan calculations and approvals can be automated through these
 1. [Download and unzip](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo/archive/master.zip) or [clone this repo](https://github.com/jbossdemocentral/rhdm7-qlb-loan-demo.git).
 2. Download and add products below to installs directory ( refer to [installs/README](installs/README) for more details ).
     * [Red Hat Enterprise Application Platform zip file (jboss-eap-7.3.0.zip)](https://developers.redhat.com/download-manager/file/jboss-eap-7.3.0.zip)
-    * [Decision Central deployable (rhdm-7.10.0-decision-central-eap7-deployable.zip](https://developers.redhat.com/products/red-hat-decision-manager/download)
-    * [Decision Server (KIE Server) deployable (rhdm-7.10.0-kie-server-ee8.zip)](https://developers.redhat.com/products/red-hat-decision-manager/download)
-3. Run 'init.sh' or 'init.bat' file. 'init.bat' must be run with Administrative privileges
+    * [Decision Central deployable (rhdm-7.11.0-decision-central-eap7-deployable.zip](https://developers.redhat.com/products/red-hat-decision-manager/download)
+    * [Decision Server (KIE Server) deployable (rhdm-7.11.0-kie-server-ee8.zip)](https://developers.redhat.com/products/red-hat-decision-manager/download)
+3. Run 'init.sh' or 'init.bat' file. 'init.bat' must be run with Administrative privileges (_node12 required_)
 
 Follow the install output instructions and log in to Decision Central. 
 
@@ -207,6 +207,8 @@ Supporting articles and videos
 Released versions
 -----------------
 See the tagged releases for the following versions of the product:
+
+- v1.7 - Red Hat Decision Manager 7.11.0.GA
 
 - v1.6 - Red Hat Decision Manager 7.10.0.GA
 
