@@ -16,7 +16,7 @@ We'll see how the loan calculations and approvals can be automated through these
 
 # Technical Details
 * This demo runs in Red Hat Decision Manager 7.11. 
-* You can either provision it locally in Red Hat EAP, in CRC or on OpenShift Container Platform 4.6;
+* You can either provision it locally in Red Hat EAP, on OpenShift Container Platform 4.7 and CRC;
 * In this demo, you will be given examples of calling the rules as if using them from an application through the Rest API that is exposed by the Decision Engine. 
 * You'll also have available a Node.js client application written in AngularJS and PatternFly that showcases how web applications can consume decision services deployed on the decision server.
 
@@ -34,7 +34,21 @@ Follow the install output instructions and log in to Decision Central.
 - Decision Central: http://localhost:8080/decision-central  (u:dmAdmin / p:redhatdm1!)
 - Kie Server Swagger UI:  http://localhost:8080/kie-server/docs :  (u: kieserver / p:kieserver1!)
 
-Enjoy installed and configured Red Hat Decision Manager Quick Loan Bank Demo (see below for how to run demo).
+Enjoy installed and configured Red Hat Decision Manager Quick Loan Bank Demo (see in the end of this readme for how to run demo).
+
+Installing on OpenShift Container Platform (CodeReady Containers)
+---------------------------------------------------------------
+Install this demo on your local machine using an OpenShift Container Platform development cluster can be done using 
+CodeReady Continers. It's fully automated and delivers a fully functioning container-native development experience:
+
+  [CodeReady Containers Quick Loan Bank Demo](https://gitlab.com/redhatdemocentral/crc-quick-loan-bank-demo)
+
+Installing on any OpenShift Container Platform (generic)
+-------------------------------------------------------
+This demo can be installed on your own version of OpenShift Container Platform. Detailed options and guidance can be found in the [openshift support directory README](support/openshift/README.md).
+
+Once connected to your cluster, move to the `support/openshift/` directory and execute:
+`$ ./init-openshift.sh`
 
 
 ## Running the demo
@@ -181,28 +195,11 @@ Demonstrate how simple it is to update and deploy a business rules.
 4. Open the QLB UI frontend application, and simply submit the form again without changing the data or reloading the page. You should see the new rules are already in use.
     ![](./docs/demo-images/qlb_ui_reject.png)
 
-
-
-Installing on OpenShift Container Platform (CodeReady Containers)
----------------------------------------------------------------
-Install this demo on your local machine using an OpenShift Container Platform development cluster can be done using 
-CodeReady Continers. It's fully automated and delivers a fully functioning container-native development experience:
-
-  [CodeReady Containers Quick Loan Bank Demo](https://gitlab.com/redhatdemocentral/crc-quick-loan-bank-demo)
-
-Installing on any OpenShift Container Platform (generic)
--------------------------------------------------------
-This demo can be installed on your own version of OpenShift Container Platform. Detailed options and guidance can be found in the [openshift support directory README](support/openshift/README.md).
-
-Once connected to your cluster, move to the `support/openshift/` directory and execute:
-`$ ./init-openshift.sh`
-
 Supporting articles and videos
 -------------------
 
 - [Getting Started with Red Hat Decision Manager 7](https://developers.redhat.com/blog/2018/03/19/red-hat-decision-manager-7/)
 - [Video - Red Hat Decision Manager Install Demo](https://youtu.be/7Vpf9i1yJXU)
-
 
 Released versions
 -----------------
@@ -234,3 +231,5 @@ Extra images
 ![Swagger UI Rules Request](./docs/demo-images/kie-server-swagger-ui-rules-request.png)
 
 ![Swagger UI Rules Response](./docs/demo-images/kie-server-swagger-ui-rules-response.png)
+
+
