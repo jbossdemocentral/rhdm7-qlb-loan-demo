@@ -55,8 +55,6 @@ Once connected to your cluster, move to the `support/openshift/` directory and e
 
 1. Click on the "loan-pre-approval" project to open the Loan Application Demo project.
 
-    ![](./docs/demo-images/bc-loan-pre-approval-project.png)
-
 2. About the project:
 
     * The project has simple data models (Loan & Applicant) and a decision flow (decision-flow.bpmn) which shows how the groups of rules are logically triggered in order to come out with a loan pre approval. 
