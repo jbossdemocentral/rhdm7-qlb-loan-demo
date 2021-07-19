@@ -15,7 +15,10 @@ You will see the “Overview” screen with 2 Applications and 3 Pods.
 image::../demo-images/OpenShift_Overview.png[]
 
 [start=1]
-. Expand the `rhdm7-qlb-rhdmcentr` Pod and click on the `http` route on the right hand side of the screen. This should bring you to the Decision Central login screen.
+. Open Decision Central by clicking on the corner arrow on top the pod `rhdm7-qlb-rhdmcentr`. A new tab should be opened with the Decision Central login screen.
+
+image::../demo-images/OpenShift-opendecisioncentral.png[]
+
 . Login with username *dmAdmin* and password *redhatdm1!*. The Decision Central HomePage will be opened.
 +
 image::../demo-images/DM7_HomePage.png[]
@@ -29,13 +32,13 @@ image::../demo-images/Asset_Library.png[]
 . Once the project has been build, navigate to the *Menu -> Deploy -> Execution Servers* screen. This will show the project deployed and running on the Decision Server.
 +
 image::../demo-images/Execution_Servers.png[]
-. *OPTIONAL*: To show the powerful RESTful API of Decision Server, one of the key functionalities of our system in cloud-native and modern application development, go back to the OpenShift console. Expand the `rhdm7-qlb-kieserver` Pod and click on the `http` route on the right hand side of the screen. This will open a new browser window and will display the text *Forbidden*. Add `/docs` to the end of the KIE-Server/Decision Server URL in your browser to open the Swagger documentation of our the RESTful API of Decision Server.
+. *OPTIONAL*: To show the powerful RESTful API of Decision Server, one of the key functionalities of our system in cloud-native and modern application development, go back to the OpenShift console. Locate the `rhdm7-qlb-kieserver` Pod and click on the arrow located on top of it to open the server route. This will open a new browser tab and will display the text *Forbidden*. Add `/docs` to the end of the KIE-Server/Decision Server URL in your browser to open the Swagger documentation of our the RESTful API of Decision Server.
 +
 image::../demo-images/Swagger.png[]
-. *OPTIONAL*: Try some of the RESTful APIs. The easiest one to show is the `GET: /server/containers` API in `KIE Server :: Core`. This API will provide information on all the KIE-Containers deployed on the KIE-Server. Click on this, API, click on the *Try it out* button and click on the *Execute* button. The KIE-Server is secured, so you will be asked for credentials. Username: *kieserver*, password: *kieserver1!*. The result shows our `loan_application` container deployed on the server. Explain that this powerful RESTful API allows our platform to run natively in microservices architectures and allows us to integrate with any service, application and/or client that can do REST calls using JSON or XML formats.
+. *OPTIONAL*: Try some of the RESTful APIs. The easiest one to show is the `GET: /server/containers` API in `KIE Server and KIE containers` section. This API will provide information on all the KIE-Containers deployed on the KIE-Server. Click on this, API, click on the *Try it out* button and click on the *Execute* button. The KIE-Server is secured, so you will be asked for credentials. Username: *dmAdmin*, password: *redhatdm1!*. The result shows our `loan_application` container deployed on the server. Explain that this powerful RESTful API allows our platform to run natively in microservices architectures and allows us to integrate with any service, application and/or client that can do REST calls using JSON or XML formats.
 +
 image::../demo-images/RESTful_Response.png[]
-. Navigate back to the OpenShift console. We will now open the AngularJS/PatternFly client application and apply for a Loan. In the Overview page, click on the “http” route of the `qlb-client-application` Pod. This will open a new browser window showing the client app.
+. Navigate back to the OpenShift console. We will now open the AngularJS/PatternFly client application and apply for a Loan. In the Overview page, locate the pod `qlb-client-application` and click on the "Open URL" arrow on top of it. This will open a new browser window showing the client app.
 +
 image::../demo-images/QLB_Application.png[]
 . Fill in the following information:
