@@ -192,8 +192,10 @@ CodeReady Continers. It's fully automated and delivers a fully functioning conta
 
 Installing on any OpenShift Container Platform (generic)
 -------------------------------------------------------
-[WIP] This demo can be installed on your own version of OpenShift Container Platform. Options and guidance can be found in the 
-[openshift support directory README](support/openshift/README.md).
+This demo can be installed on your own version of OpenShift Container Platform. Detailed options and guidance can be found in the [openshift support directory README](support/openshift/README.md).
+
+Once connected to your cluster, move to the `support/openshift/` directory and execute:
+`$ ./init-openshift.sh`
 
 Supporting articles and videos
 -------------------
